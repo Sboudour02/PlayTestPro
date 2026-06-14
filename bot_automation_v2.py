@@ -27,9 +27,9 @@ except ImportError:
     pass
 
 # ── TELEGRAM ──
-from telegram import Bot, Update
+from telegram import Bot, Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.constants import ParseMode
-from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 # ── SCHEDULER ──
 try:
@@ -67,6 +67,7 @@ RETRY_DELAY = int(os.getenv("RETRY_DELAY", "10"))
 # ── PATHS ──
 SCRIPT_DIR = Path(__file__).parent.resolve()
 POSTS_JSON_PATH = SCRIPT_DIR / "posts.json"
+XPOSTS_JSON_PATH = SCRIPT_DIR / "xposts.json"
 DB_PATH = SCRIPT_DIR / "analytics.db"
 MEDIA_DIR = SCRIPT_DIR / "media"
 MEDIA_DIR.mkdir(exist_ok=True)
@@ -234,13 +235,100 @@ class XPoster:
             logger.error(f"❌ Tweet failed: {e}")
             return {"success": False, "error": str(e)}
 
-    def build_tweet_text(self, post: dict) -> str:
-        text_en = post["text"]
-        day = post["day"]
-        post_num = post["post_number"]
+    async def post_tweet_with_media(self, text: str, media_path: Path = None) -> dict:
+        if not self.enabled or not self.client:
+            return {"success": False, "error": "X API not configured"}
+        try:
+            if media_path and media_path.exists():
+                auth_v1 = tweepy.OAuthHandler(X_API_KEY, X_API_SECRET)
+                auth_v1.set_access_token(X_ACCESS_TOKEN, X_ACCESS_TOKEN_SECRET)
+                api_v1 = tweepy.API(auth_v1)
+                media = await asyncio.to_thread(api_v1.media_upload, filename=str(media_path))
+                response = await asyncio.to_thread(
+                    self.client.create_tweet, text=text, media_ids=[media.media_id]
+                )
+            else:
+                response = await asyncio.to_thread(self.client.create_tweet, text=text)
+            tweet_id = response.data["id"]
+            self.last_tweet_id = tweet_id
+            logger.info(f"✅ Tweeted with media | ID: {tweet_id}")
+            return {"success": True, "tweet_id": tweet_id}
+        except Exception as e:
+            logger.error(f"❌ Tweet failed: {e}")
+            return {"success": False, "error": str(e)}
+
+    def build_tweet_text(self, xpost: dict) -> str:
+        text_en = xpost["text"]
         channel_link = "https://t.me/QannasCore"
         hashtags = "#PlayTest_Pro #AndroidDev #AppTesting"
-        return f"📢 New Post: Day {day}, #{post_num}\n\n{text_en[:200]}\n\n{hashtags}\n🔗 {channel_link}"
+        return f"{text_en}\n\n{hashtags}\n🔗 {channel_link}"
+
+
+# ═══════════════════════════════════════════════════════════════
+#  X POST MANAGER
+# ═══════════════════════════════════════════════════════════════
+class XPostManager:
+    def __init__(self, path: Path = XPOSTS_JSON_PATH):
+        self.path = path
+        self.posts = self._load_or_generate()
+
+    def _load_or_generate(self) -> list:
+        if self.path.exists():
+            with open(self.path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        logger.info("xposts.json not found, generating from posts.json...")
+        return self._generate_from_posts()
+
+    def _generate_from_posts(self) -> list:
+        try:
+            with open(POSTS_JSON_PATH, "r", encoding="utf-8") as f:
+                tg_posts = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            logger.error(f"Cannot generate xposts.json: {e}")
+            return []
+        MAX_TEXT = 170
+        xposts = []
+        for p in tg_posts:
+            text = p["text"]
+            if len(text) > MAX_TEXT:
+                cut = text.rfind(" ", 0, MAX_TEXT - 1)
+                if cut < MAX_TEXT // 2:
+                    cut = MAX_TEXT - 3
+                text = text[:cut].rstrip() + "..."
+            xposts.append({
+                "day": p["day"],
+                "post_number": p["post_number"],
+                "hour": p.get("hour", 9),
+                "text": text,
+                "post_media": p.get("post_media", ""),
+                "published": False,
+            })
+        self.save()
+        logger.info(f"✅ Generated {len(xposts)} xposts from posts.json")
+        return xposts
+
+    def save(self):
+        with open(self.path, "w", encoding="utf-8") as f:
+            json.dump(self.posts, f, ensure_ascii=False, indent=2)
+
+    def get_next_unpublished(self) -> dict | None:
+        for p in self.posts:
+            if not p.get("published", False):
+                return p
+        return None
+
+    def get_matching(self, day: int, post_number: int) -> dict | None:
+        for p in self.posts:
+            if p["day"] == day and p["post_number"] == post_number:
+                return p
+        return None
+
+    def mark_published(self, day: int, post_number: int):
+        for p in self.posts:
+            if p["day"] == day and p["post_number"] == post_number:
+                p["published"] = True
+                self.save()
+                return
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -309,6 +397,34 @@ def save_posts(posts: list) -> None:
         logger.error(f"Failed to save posts.json: {e}")
 
 
+async def post_to_telegram(poster, post, msg_to_edit=None) -> dict:
+    """Post to Telegram channel, return result."""
+    text = build_bilingual(post)
+    media_file = post.get("post_media", "")
+    media_path = MEDIA_DIR / media_file if media_file else None
+    return await poster.post_message(
+        text,
+        day=post["day"],
+        post_number=post["post_number"],
+        media_path=media_path
+    )
+
+
+async def post_to_x(x_poster, x_mgr, post, msg_to_edit=None) -> dict:
+    """Post matching xpost to X, return result."""
+    if not x_poster or not x_poster.enabled:
+        return {"success": False, "error": "X not configured"}
+    xpost = x_mgr.get_matching(post["day"], post["post_number"])
+    if not xpost:
+        return {"success": False, "error": "No matching xpost found"}
+    if xpost.get("published"):
+        return {"success": False, "error": "Already published on X"}
+    tweet_text = x_poster.build_tweet_text(xpost)
+    media_file = xpost.get("post_media", "")
+    media_path = MEDIA_DIR / media_file if media_file else None
+    return await x_poster.post_tweet_with_media(tweet_text, media_path)
+
+
 def build_bilingual(post: dict) -> str:
     """Build combined English + Arabic message with hashtags."""
     text_en = post["text"]
@@ -355,7 +471,7 @@ async def cmd_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 @admin_only
 async def cmd_post_now(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """/post_now — Post the next unpublished message immediately"""
+    """/post_now — Choose platform to post on"""
     posts = context.application.bot_data.get("posts", [])
     poster = context.application.bot_data.get("poster")
     if not poster:
@@ -364,47 +480,144 @@ async def cmd_post_now(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     post = get_next_unpublished(posts)
     if not post:
-        await update.message.reply_text("✅ All posts have been published!")
+        await update.message.reply_text("✅ All TG posts have been published!")
+        return
+
+    context.bot_data["pending_post"] = {
+        "day": post["day"],
+        "post_number": post["post_number"],
+    }
+
+    keyboard = [
+        [
+            InlineKeyboardButton("📱 Telegram", callback_data="platform_tg"),
+            InlineKeyboardButton("🐦 X", callback_data="platform_x"),
+        ],
+        [
+            InlineKeyboardButton("📱+🐦 Both", callback_data="platform_both"),
+            InlineKeyboardButton("❌ Cancel", callback_data="platform_cancel"),
+        ],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await update.message.reply_text(
+        f"📢 <b>Day {post['day']}, Post #{post['post_number']}</b>\n\n"
+        f"Where to post?",
+        reply_markup=reply_markup,
+        parse_mode=ParseMode.HTML,
+    )
+
+
+async def cmd_platform_choice(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+
+    choice = query.data
+    if choice == "platform_cancel":
+        await query.edit_message_text("❌ Cancelled.")
+        return
+
+    pending = context.bot_data.get("pending_post", {})
+    day = pending.get("day")
+    post_number = pending.get("post_number")
+
+    posts = context.application.bot_data.get("posts", [])
+    poster = context.application.bot_data.get("poster")
+    x_poster = context.application.bot_data.get("x_poster")
+    x_mgr = context.application.bot_data.get("x_mgr")
+
+    # Find the post
+    post = None
+    for p in posts:
+        if p["day"] == day and p["post_number"] == post_number:
+            post = p
+            break
+    if not post:
+        await query.edit_message_text("❌ Post not found.")
+        return
+
+    await query.edit_message_text(
+        f"🚀 Posting Day {day}, Post #{post_number}..."
+    )
+
+    results = []
+
+    if choice in ("platform_tg", "platform_both"):
+        result = await post_to_telegram(poster, post)
+        if result.get("success"):
+            post["published"] = True
+            save_posts(posts)
+            results.append(f"📱 Telegram: ✅ (ID: {result['message_id']})")
+        else:
+            results.append(f"📱 Telegram: ❌ {result.get('error', '')}")
+
+    if choice in ("platform_x", "platform_both"):
+        result = await post_to_x(x_poster, x_mgr, post)
+        if result.get("success"):
+            x_mgr.mark_published(day, post_number)
+            results.append(f"🐦 X: ✅ (ID: {result['tweet_id']})")
+        else:
+            results.append(f"🐦 X: ❌ {result.get('error', '')}")
+
+    await query.edit_message_text(
+        f"📢 <b>Day {day}, Post #{post_number}</b>\n\n" + "\n".join(results),
+        parse_mode=ParseMode.HTML,
+    )
+
+
+@admin_only
+async def cmd_x_now(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """/x_now — Post the next unpublished xpost to X"""
+    x_poster = context.application.bot_data.get("x_poster")
+    x_mgr = context.application.bot_data.get("x_mgr")
+    if not x_poster or not x_poster.enabled:
+        await update.message.reply_text("🐦 X is not configured.")
+        return
+
+    xpost = x_mgr.get_next_unpublished() if x_mgr else None
+    if not xpost:
+        await update.message.reply_text("✅ All X posts have been published!")
         return
 
     msg = await update.message.reply_text(
-        f"🚀 Posting Day {post['day']}, Post #{post['post_number']}..."
+        f"🐦 Posting Day {xpost['day']}, Post #{xpost['post_number']} to X..."
     )
 
-    # Build and send
-    text = build_bilingual(post)
-    media_file = post.get("post_media", "")
+    tweet_text = x_poster.build_tweet_text(xpost)
+    media_file = xpost.get("post_media", "")
     media_path = MEDIA_DIR / media_file if media_file else None
-    result = await poster.post_message(
-        text,
-        day=post["day"],
-        post_number=post["post_number"],
-        media_path=media_path
-    )
+    result = await x_poster.post_tweet_with_media(tweet_text, media_path)
 
     if result.get("success"):
-        post["published"] = True
-        save_posts(posts)
-
-        x_result = ""
-        x_poster = context.application.bot_data.get("x_poster")
-        if x_poster and x_poster.enabled:
-            tweet_text = x_poster.build_tweet_text(post)
-            xr = await x_poster.post_tweet(tweet_text)
-            x_result = f"\n🐦 Tweet: {'✅' if xr.get('success') else '❌ ' + xr.get('error', '')}"
-
+        x_mgr.mark_published(xpost["day"], xpost["post_number"])
         await msg.edit_text(
-            f"✅ <b>Posted!</b>\n\n"
-            f"Day {post['day']}, Post #{post['post_number']}\n"
-            f"Message ID: {result['message_id']}"
-            f"{x_result}",
-            parse_mode=ParseMode.HTML
+            f"✅ <b>Posted to X!</b>\n\n"
+            f"Day {xpost['day']}, Post #{xpost['post_number']}\n"
+            f"Tweet ID: {result['tweet_id']}",
+            parse_mode=ParseMode.HTML,
         )
     else:
         await msg.edit_text(
-            f"❌ <b>Failed</b>\n\n{result.get('error', 'Unknown error')}",
-            parse_mode=ParseMode.HTML
+            f"❌ <b>X Post Failed</b>\n\n{result.get('error', 'Unknown error')}",
+            parse_mode=ParseMode.HTML,
         )
+
+
+@admin_only
+async def cmd_x_skip(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """/x_skip — Mark the next unpublished xpost as published"""
+    x_mgr = context.application.bot_data.get("x_mgr")
+    xpost = x_mgr.get_next_unpublished() if x_mgr else None
+    if not xpost:
+        await update.message.reply_text("✅ All X posts have been published or skipped!")
+        return
+
+    x_mgr.mark_published(xpost["day"], xpost["post_number"])
+    await update.message.reply_text(
+        f"⏭️ <b>Skipped on X</b>\n\n"
+        f"Day {xpost['day']}, Post #{xpost['post_number']} marked as published.",
+        parse_mode=ParseMode.HTML,
+    )
 
 
 @admin_only
@@ -450,16 +663,30 @@ async def cmd_scan_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def cmd_x_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """/x_status — Show X (Twitter) integration status"""
     x_poster = context.application.bot_data.get("x_poster")
+    x_mgr = context.application.bot_data.get("x_mgr")
     if not x_poster or not x_poster.enabled:
-        await update.message.reply_text("🐦 <b>X Integration</b>\n\n❌ Not configured or disabled.", parse_mode=ParseMode.HTML)
+        await update.message.reply_text(
+            "🐦 <b>X Status</b>\n\n❌ Not configured or disabled.",
+            parse_mode=ParseMode.HTML,
+        )
         return
 
-    last_tweet = x_poster.last_tweet_id or "N/A"
+    total = len(x_mgr.posts) if x_mgr else 0
+    published = sum(1 for p in x_mgr.posts if p.get("published")) if x_mgr else 0
+    remaining = total - published
+    next_x = x_mgr.get_next_unpublished() if x_mgr else None
+    next_info = ""
+    if next_x:
+        next_info = f"\n📌 Next: Day {next_x['day']}, Post #{next_x['post_number']}"
+
     await update.message.reply_text(
-        f"🐦 <b>X Integration</b>\n\n"
+        f"🐦 <b>X Status</b>\n\n"
         f"✅ Enabled\n"
-        f"🆔 Last Tweet: {last_tweet}",
-        parse_mode=ParseMode.HTML
+        f"📚 Total: {total}\n"
+        f"✅ Published: {published}\n"
+        f"⏳ Remaining: {remaining}"
+        f"{next_info}",
+        parse_mode=ParseMode.HTML,
     )
 
 
@@ -499,10 +726,11 @@ async def cmd_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
 #  SCHEDULER
 # ═══════════════════════════════════════════════════════════════
 class PostScheduler:
-    def __init__(self, poster: TelegramPoster, posts: list[dict], x_poster: XPoster = None):
+    def __init__(self, poster: TelegramPoster, posts: list[dict], x_poster: XPoster = None, x_mgr: XPostManager = None):
         self.poster = poster
         self.posts = posts
         self.x_poster = x_poster
+        self.x_mgr = x_mgr
         self.scheduler = None
         if AsyncIOScheduler and CronTrigger:
             self.scheduler = AsyncIOScheduler()
@@ -560,10 +788,16 @@ class PostScheduler:
                 except Exception as e:
                     logger.error(f"Failed to save published state: {e}")
 
-                # Also post to X if enabled
-                if self.x_poster and self.x_poster.enabled:
-                    tweet_text = self.x_poster.build_tweet_text(post)
-                    await self.x_poster.post_tweet(tweet_text)
+                # Also post to X if enabled and not already posted
+                if self.x_poster and self.x_poster.enabled and self.x_mgr:
+                    xpost = self.x_mgr.get_matching(current_day, post["post_number"])
+                    if xpost and not xpost.get("published"):
+                        tweet_text = self.x_poster.build_tweet_text(xpost)
+                        media_file = xpost.get("post_media", "")
+                        media_path = MEDIA_DIR / media_file if media_file else None
+                        xr = await self.x_poster.post_tweet_with_media(tweet_text, media_path)
+                        if xr.get("success"):
+                            self.x_mgr.mark_published(current_day, post["post_number"])
 
             # Rate limit
             if i < len(today_posts) - 1:
@@ -657,6 +891,7 @@ async def main():
     db = AnalyticsDB()
     poster = TelegramPoster(TELEGRAM_BOT_TOKEN, TELEGRAM_CHANNEL_ID, db)
     x_poster = XPoster()
+    x_mgr = XPostManager()
 
     # Load posts
     try:
@@ -668,7 +903,7 @@ async def main():
     if not validate_posts(posts):
         sys.exit(1)
 
-    logger.info(f"📚 Loaded {len(posts)} posts.")
+    logger.info(f"📚 Loaded {len(posts)} posts. X posts: {len(x_mgr.posts)}")
 
     # Auto-scan media folder on startup
     run_media_scan(posts)
@@ -681,6 +916,7 @@ async def main():
     app.bot_data["posts"] = posts
     app.bot_data["db"] = db
     app.bot_data["x_poster"] = x_poster
+    app.bot_data["x_mgr"] = x_mgr
 
     app.add_handler(CommandHandler("status", cmd_status))
     app.add_handler(CommandHandler("post_now", cmd_post_now))
@@ -688,14 +924,17 @@ async def main():
     app.add_handler(CommandHandler("stats", cmd_stats))
     app.add_handler(CommandHandler("scan_media", cmd_scan_media))
     app.add_handler(CommandHandler("x_status", cmd_x_status))
+    app.add_handler(CommandHandler("x_now", cmd_x_now))
+    app.add_handler(CommandHandler("x_skip", cmd_x_skip))
+    app.add_handler(CallbackQueryHandler(cmd_platform_choice, pattern="^platform_"))
 
     # Setup scheduler
-    scheduler = PostScheduler(poster, posts, x_poster)
+    scheduler = PostScheduler(poster, posts, x_poster, x_mgr)
     app.bot_data["scheduler"] = scheduler
     scheduler.start()
 
     # Start bot (for commands)
-    logger.info("🤖 Starting bot... Use /status, /stats, /post_now, /skip, /scan_media")
+    logger.info("🤖 Starting bot... /status, /post_now, /skip, /stats, /x_now, /x_skip, /x_status")
     await app.initialize()
     await app.start()
     await app.updater.start_polling()
