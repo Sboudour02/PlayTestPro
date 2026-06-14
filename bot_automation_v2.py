@@ -15,6 +15,7 @@ import re
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from functools import wraps
+import requests
 
 # ── ENV ──
 SCRIPT_DIR = Path(__file__).parent.resolve()
@@ -64,6 +65,10 @@ X_ACCESS_TOKEN = os.getenv("X_ACCESS_TOKEN", "").strip()
 X_ACCESS_TOKEN_SECRET = os.getenv("X_ACCESS_TOKEN_SECRET", "").strip()
 X_BEARER_TOKEN = os.getenv("X_BEARER_TOKEN", "").strip()
 
+# ── Facebook Page API ──
+FB_PAGE_ID = os.getenv("FB_PAGE_ID", "").strip()
+FB_PAGE_ACCESS_TOKEN = os.getenv("FB_PAGE_ACCESS_TOKEN", "").strip()
+
 # ── RATE LIMITING ──
 MIN_DELAY_BETWEEN_POSTS = int(os.getenv("MIN_DELAY_BETWEEN_POSTS", "5"))
 MAX_RETRIES = int(os.getenv("MAX_RETRIES", "3"))
@@ -73,6 +78,7 @@ RETRY_DELAY = int(os.getenv("RETRY_DELAY", "10"))
 SCRIPT_DIR = Path(__file__).parent.resolve()
 POSTS_JSON_PATH = SCRIPT_DIR / "posts.json"
 XPOSTS_JSON_PATH = SCRIPT_DIR / "xposts.json"
+FBPOSTS_JSON_PATH = SCRIPT_DIR / "fbposts.json"
 DB_PATH = SCRIPT_DIR / "analytics.db"
 MEDIA_DIR = SCRIPT_DIR / "media"
 MEDIA_DIR.mkdir(exist_ok=True)
@@ -270,6 +276,71 @@ class XPoster:
 
 
 # ═══════════════════════════════════════════════════════════════
+#  FACEBOOK (META) POSTER
+# ═══════════════════════════════════════════════════════════════
+class FacebookPoster:
+    def __init__(self):
+        self.page_id = FB_PAGE_ID
+        self.access_token = FB_PAGE_ACCESS_TOKEN
+        self.enabled = bool(self.page_id and self.access_token)
+        if self.enabled:
+            logger.info("📘 Facebook API initialized.")
+        else:
+            logger.warning("⚠️ Facebook not configured (missing FB_PAGE_ID or FB_PAGE_ACCESS_TOKEN).")
+
+    async def post_to_feed(self, text: str) -> dict:
+        if not self.enabled:
+            return {"success": False, "error": "Facebook not configured"}
+        try:
+            url = f"https://graph.facebook.com/v21.0/{self.page_id}/feed"
+            params = {"access_token": self.access_token, "message": text}
+            response = await asyncio.to_thread(requests.post, url, params=params)
+            data = response.json()
+            if "id" in data:
+                post_id = data["id"]
+                logger.info(f"✅ FB posted | ID: {post_id}")
+                return {"success": True, "post_id": post_id}
+            error_msg = data.get("error", {}).get("message", str(data))
+            logger.error(f"❌ FB post failed: {error_msg}")
+            return {"success": False, "error": error_msg}
+        except Exception as e:
+            logger.error(f"❌ FB post exception: {e}")
+            return {"success": False, "error": str(e)}
+
+    async def post_with_photo(self, text: str, media_path: Path = None) -> dict:
+        if not self.enabled:
+            return {"success": False, "error": "Facebook not configured"}
+        try:
+            if media_path and media_path.exists():
+                url = f"https://graph.facebook.com/v21.0/{self.page_id}/photos"
+                with open(media_path, "rb") as f:
+                    response = await asyncio.to_thread(
+                        requests.post, url,
+                        params={"access_token": self.access_token, "message": text},
+                        files={"source": f}
+                    )
+            else:
+                return await self.post_to_feed(text)
+            data = response.json()
+            if "id" in data:
+                post_id = data.get("post_id", data["id"])
+                logger.info(f"✅ FB posted with photo | ID: {data['id']}")
+                return {"success": True, "post_id": data["id"]}
+            error_msg = data.get("error", {}).get("message", str(data))
+            logger.error(f"❌ FB photo post failed: {error_msg}")
+            return {"success": False, "error": error_msg}
+        except Exception as e:
+            logger.error(f"❌ FB photo post exception: {e}")
+            return {"success": False, "error": str(e)}
+
+    def build_post_text(self, fbpost: dict) -> str:
+        text_en = fbpost["text"]
+        hashtags = "#PlayTest_Pro #AndroidDev #AppTesting"
+        channel_link = "https://t.me/QannasCore"
+        return f"{text_en}\n\n{hashtags}\n🔗 {channel_link}"
+
+
+# ═══════════════════════════════════════════════════════════════
 #  X POST MANAGER
 # ═══════════════════════════════════════════════════════════════
 class XPostManager:
@@ -311,6 +382,73 @@ class XPostManager:
         self.save()
         logger.info(f"✅ Generated {len(xposts)} xposts from posts.json")
         return xposts
+
+    def save(self):
+        with open(self.path, "w", encoding="utf-8") as f:
+            json.dump(self.posts, f, ensure_ascii=False, indent=2)
+
+    def get_next_unpublished(self) -> dict | None:
+        for p in self.posts:
+            if not p.get("published", False):
+                return p
+        return None
+
+    def get_matching(self, day: int, post_number: int) -> dict | None:
+        for p in self.posts:
+            if p["day"] == day and p["post_number"] == post_number:
+                return p
+        return None
+
+    def mark_published(self, day: int, post_number: int):
+        for p in self.posts:
+            if p["day"] == day and p["post_number"] == post_number:
+                p["published"] = True
+                self.save()
+                return
+
+
+# ═══════════════════════════════════════════════════════════════
+#  FB POST MANAGER
+# ═══════════════════════════════════════════════════════════════
+class FBPostManager:
+    def __init__(self, path: Path = FBPOSTS_JSON_PATH):
+        self.path = path
+        self.posts = self._load_or_generate()
+
+    def _load_or_generate(self) -> list:
+        if self.path.exists():
+            with open(self.path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        logger.info("fbposts.json not found, generating from posts.json...")
+        return self._generate_from_posts()
+
+    def _generate_from_posts(self) -> list:
+        try:
+            with open(POSTS_JSON_PATH, "r", encoding="utf-8") as f:
+                tg_posts = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            logger.error(f"Cannot generate fbposts.json: {e}")
+            return []
+        MAX_TEXT = 300
+        fbposts = []
+        for p in tg_posts:
+            text = p["text"]
+            if len(text) > MAX_TEXT:
+                cut = text.rfind(" ", 0, MAX_TEXT - 1)
+                if cut < MAX_TEXT // 2:
+                    cut = MAX_TEXT - 3
+                text = text[:cut].rstrip() + "..."
+            fbposts.append({
+                "day": p["day"],
+                "post_number": p["post_number"],
+                "hour": p.get("hour", 9),
+                "text": text,
+                "post_media": p.get("post_media", ""),
+                "published": False,
+            })
+        self.save()
+        logger.info(f"✅ Generated {len(fbposts)} fbposts from posts.json")
+        return fbposts
 
     def save(self):
         with open(self.path, "w", encoding="utf-8") as f:
@@ -430,6 +568,21 @@ async def post_to_x(x_poster, x_mgr, post, msg_to_edit=None) -> dict:
     return await x_poster.post_tweet_with_media(tweet_text, media_path)
 
 
+async def post_to_fb(fb_poster, fb_mgr, post, msg_to_edit=None) -> dict:
+    """Post matching fbpost to Facebook, return result."""
+    if not fb_poster or not fb_poster.enabled:
+        return {"success": False, "error": "Facebook not configured"}
+    fbpost = fb_mgr.get_matching(post["day"], post["post_number"])
+    if not fbpost:
+        return {"success": False, "error": "No matching fbpost found"}
+    if fbpost.get("published"):
+        return {"success": False, "error": "Already published on Facebook"}
+    fb_text = fb_poster.build_post_text(fbpost)
+    media_file = fbpost.get("post_media", "")
+    media_path = MEDIA_DIR / media_file if media_file else None
+    return await fb_poster.post_with_photo(fb_text, media_path)
+
+
 def build_bilingual(post: dict) -> str:
     """Build combined English + Arabic message with hashtags."""
     text_en = post["text"]
@@ -496,10 +649,10 @@ async def cmd_post_now(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
         [
             InlineKeyboardButton("📱 Telegram", callback_data="platform_tg"),
-            InlineKeyboardButton("🐦 X", callback_data="platform_x"),
+            InlineKeyboardButton("📘 Facebook", callback_data="platform_fb"),
         ],
         [
-            InlineKeyboardButton("📱+🐦 Both", callback_data="platform_both"),
+            InlineKeyboardButton("📱+📘 Both", callback_data="platform_both"),
             InlineKeyboardButton("❌ Cancel", callback_data="platform_cancel"),
         ],
     ]
@@ -528,8 +681,8 @@ async def cmd_platform_choice(update: Update, context: ContextTypes.DEFAULT_TYPE
 
     posts = context.application.bot_data.get("posts", [])
     poster = context.application.bot_data.get("poster")
-    x_poster = context.application.bot_data.get("x_poster")
-    x_mgr = context.application.bot_data.get("x_mgr")
+    fb_poster = context.application.bot_data.get("fb_poster")
+    fb_mgr = context.application.bot_data.get("fb_mgr")
 
     # Find the post
     post = None
@@ -556,13 +709,13 @@ async def cmd_platform_choice(update: Update, context: ContextTypes.DEFAULT_TYPE
         else:
             results.append(f"📱 Telegram: ❌ {result.get('error', '')}")
 
-    if choice in ("platform_x", "platform_both"):
-        result = await post_to_x(x_poster, x_mgr, post)
+    if choice in ("platform_fb", "platform_both"):
+        result = await post_to_fb(fb_poster, fb_mgr, post)
         if result.get("success"):
-            x_mgr.mark_published(day, post_number)
-            results.append(f"🐦 X: ✅ (ID: {result['tweet_id']})")
+            fb_mgr.mark_published(day, post_number)
+            results.append(f"📘 Facebook: ✅ (ID: {result['post_id']})")
         else:
-            results.append(f"🐦 X: ❌ {result.get('error', '')}")
+            results.append(f"📘 Facebook: ❌ {result.get('error', '')}")
 
     await query.edit_message_text(
         f"📢 <b>Day {day}, Post #{post_number}</b>\n\n" + "\n".join(results),
@@ -754,15 +907,130 @@ async def cmd_xstats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
+@admin_only
+async def cmd_fb_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """/fb_status — Show Facebook integration status"""
+    fb_poster = context.application.bot_data.get("fb_poster")
+    fb_mgr = context.application.bot_data.get("fb_mgr")
+    if not fb_poster or not fb_poster.enabled:
+        await update.message.reply_text(
+            "📘 <b>Facebook Status</b>\n\n❌ Not configured or disabled.",
+            parse_mode=ParseMode.HTML,
+        )
+        return
+
+    total = len(fb_mgr.posts) if fb_mgr else 0
+    published = sum(1 for p in fb_mgr.posts if p.get("published")) if fb_mgr else 0
+    remaining = total - published
+    next_fb = fb_mgr.get_next_unpublished() if fb_mgr else None
+    next_info = ""
+    if next_fb:
+        next_info = f"\n📌 Next: Day {next_fb['day']}, Post #{next_fb['post_number']}"
+
+    await update.message.reply_text(
+        f"📘 <b>Facebook Status</b>\n\n"
+        f"✅ Enabled\n"
+        f"📚 Total: {total}\n"
+        f"✅ Published: {published}\n"
+        f"⏳ Remaining: {remaining}"
+        f"{next_info}",
+        parse_mode=ParseMode.HTML,
+    )
+
+
+@admin_only
+async def cmd_fbstats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """/fbstats — Show detailed analytics for Facebook"""
+    fb_poster = context.application.bot_data.get("fb_poster")
+    fb_mgr = context.application.bot_data.get("fb_mgr")
+    if not fb_poster or not fb_poster.enabled:
+        await update.message.reply_text("📘 <b>Facebook Status</b>\n\n❌ Not configured or disabled.", parse_mode=ParseMode.HTML)
+        return
+
+    total = len(fb_mgr.posts) if fb_mgr else 0
+    published = sum(1 for p in fb_mgr.posts if p.get("published")) if fb_mgr else 0
+    remaining = total - published
+    next_fb = fb_mgr.get_next_unpublished() if fb_mgr else None
+    next_info = ""
+    if next_fb:
+        next_info = f"\n📌 Next: Day {next_fb['day']}, Post #{next_fb['post_number']}"
+
+    await update.message.reply_text(
+        f"📘 <b>PlayTest Pro — Facebook Analytics</b>\n\n"
+        f"📚 Total Posts: {total}\n"
+        f"✅ Published: {published}\n"
+        f"⏳ Remaining: {remaining}"
+        f"{next_info}",
+        parse_mode=ParseMode.HTML
+    )
+
+
+@admin_only
+async def cmd_fb_now(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """/fb_now — Post the next unpublished fbpost to Facebook"""
+    fb_poster = context.application.bot_data.get("fb_poster")
+    fb_mgr = context.application.bot_data.get("fb_mgr")
+    if not fb_poster or not fb_poster.enabled:
+        await update.message.reply_text("📘 Facebook is not configured.")
+        return
+
+    fbpost = fb_mgr.get_next_unpublished() if fb_mgr else None
+    if not fbpost:
+        await update.message.reply_text("✅ All Facebook posts have been published!")
+        return
+
+    msg = await update.message.reply_text(
+        f"📘 Posting Day {fbpost['day']}, Post #{fbpost['post_number']} to Facebook..."
+    )
+
+    fb_text = fb_poster.build_post_text(fbpost)
+    media_file = fbpost.get("post_media", "")
+    media_path = MEDIA_DIR / media_file if media_file else None
+    result = await fb_poster.post_with_photo(fb_text, media_path)
+
+    if result.get("success"):
+        fb_mgr.mark_published(fbpost["day"], fbpost["post_number"])
+        await msg.edit_text(
+            f"✅ <b>Posted to Facebook!</b>\n\n"
+            f"Day {fbpost['day']}, Post #{fbpost['post_number']}\n"
+            f"Post ID: {result['post_id']}",
+            parse_mode=ParseMode.HTML,
+        )
+    else:
+        await msg.edit_text(
+            f"❌ <b>Facebook Post Failed</b>\n\n{result.get('error', 'Unknown error')}",
+            parse_mode=ParseMode.HTML,
+        )
+
+
+@admin_only
+async def cmd_fb_skip(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """/fb_skip — Mark the next unpublished fbpost as published"""
+    fb_mgr = context.application.bot_data.get("fb_mgr")
+    fbpost = fb_mgr.get_next_unpublished() if fb_mgr else None
+    if not fbpost:
+        await update.message.reply_text("✅ All Facebook posts have been published or skipped!")
+        return
+
+    fb_mgr.mark_published(fbpost["day"], fbpost["post_number"])
+    await update.message.reply_text(
+        f"⏭️ <b>Skipped on Facebook</b>\n\n"
+        f"Day {fbpost['day']}, Post #{fbpost['post_number']} marked as published.",
+        parse_mode=ParseMode.HTML,
+    )
+
+
 # ═══════════════════════════════════════════════════════════════
 #  SCHEDULER
 # ═══════════════════════════════════════════════════════════════
 class PostScheduler:
-    def __init__(self, poster: TelegramPoster, posts: list[dict], x_poster: XPoster = None, x_mgr: XPostManager = None):
+    def __init__(self, poster: TelegramPoster, posts: list[dict], x_poster: XPoster = None, x_mgr: XPostManager = None, fb_poster: FacebookPoster = None, fb_mgr: FBPostManager = None):
         self.poster = poster
         self.posts = posts
         self.x_poster = x_poster
         self.x_mgr = x_mgr
+        self.fb_poster = fb_poster
+        self.fb_mgr = fb_mgr
         self.scheduler = None
         if AsyncIOScheduler and CronTrigger:
             self.scheduler = AsyncIOScheduler()
@@ -830,6 +1098,17 @@ class PostScheduler:
                         xr = await self.x_poster.post_tweet_with_media(tweet_text, media_path)
                         if xr.get("success"):
                             self.x_mgr.mark_published(current_day, post["post_number"])
+
+                # Also post to Facebook if enabled and not already posted
+                if self.fb_poster and self.fb_poster.enabled and self.fb_mgr:
+                    fbpost = self.fb_mgr.get_matching(current_day, post["post_number"])
+                    if fbpost and not fbpost.get("published"):
+                        fb_text = self.fb_poster.build_post_text(fbpost)
+                        media_file = fbpost.get("post_media", "")
+                        media_path = MEDIA_DIR / media_file if media_file else None
+                        fr = await self.fb_poster.post_with_photo(fb_text, media_path)
+                        if fr.get("success"):
+                            self.fb_mgr.mark_published(current_day, post["post_number"])
 
             # Rate limit
             if i < len(today_posts) - 1:
@@ -924,6 +1203,8 @@ async def main():
     poster = TelegramPoster(TELEGRAM_BOT_TOKEN, TELEGRAM_CHANNEL_ID, db)
     x_poster = XPoster()
     x_mgr = XPostManager()
+    fb_poster = FacebookPoster()
+    fb_mgr = FBPostManager()
 
     # Load posts
     try:
@@ -935,7 +1216,7 @@ async def main():
     if not validate_posts(posts):
         sys.exit(1)
 
-    logger.info(f"📚 Loaded {len(posts)} posts. X posts: {len(x_mgr.posts)}")
+    logger.info(f"📚 Loaded {len(posts)} posts. X: {len(x_mgr.posts)}, FB: {len(fb_mgr.posts)}")
 
     # Auto-scan media folder on startup
     run_media_scan(posts)
@@ -949,6 +1230,8 @@ async def main():
     app.bot_data["db"] = db
     app.bot_data["x_poster"] = x_poster
     app.bot_data["x_mgr"] = x_mgr
+    app.bot_data["fb_poster"] = fb_poster
+    app.bot_data["fb_mgr"] = fb_mgr
 
     app.add_handler(CommandHandler("status", cmd_status))
     app.add_handler(CommandHandler("post_now", cmd_post_now))
@@ -959,15 +1242,19 @@ async def main():
     app.add_handler(CommandHandler("xstats", cmd_xstats))
     app.add_handler(CommandHandler("x_now", cmd_x_now))
     app.add_handler(CommandHandler("x_skip", cmd_x_skip))
+    app.add_handler(CommandHandler("fb_status", cmd_fb_status))
+    app.add_handler(CommandHandler("fbstats", cmd_fbstats))
+    app.add_handler(CommandHandler("fb_now", cmd_fb_now))
+    app.add_handler(CommandHandler("fb_skip", cmd_fb_skip))
     app.add_handler(CallbackQueryHandler(cmd_platform_choice, pattern="^platform_"))
 
     # Setup scheduler
-    scheduler = PostScheduler(poster, posts, x_poster, x_mgr)
+    scheduler = PostScheduler(poster, posts, x_poster, x_mgr, fb_poster, fb_mgr)
     app.bot_data["scheduler"] = scheduler
     scheduler.start()
 
     # Start bot (for commands)
-    logger.info("🤖 Starting bot... /status, /post_now, /skip, /stats, /x_now, /x_skip, /x_status")
+    logger.info("🤖 Starting bot... /status, /post_now, /skip, /stats, /x_now, /x_skip, /x_status, /fb_status, /fbstats, /fb_now, /fb_skip")
     await app.initialize()
     await app.start()
     await app.updater.start_polling()

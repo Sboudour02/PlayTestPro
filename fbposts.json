@@ -1,0 +1,482 @@
+[
+  {
+    "day": 1,
+    "post_number": 1,
+    "hour": 9,
+    "text": "🎓 What is Google Play Closed Testing?\n\nClosed testing lets you share your app with up to 100 trusted testers before launch. You collect real feedback, catch bugs early, and increase your chances of a successful release. Google uses this data to evaluate app quality before featuring it.\n\nStart with...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 1,
+    "post_number": 2,
+    "hour": 15,
+    "text": "💬 Quick poll for developers:\n\nWhat is your biggest challenge when releasing an app?\n\nA) Finding bugs before users do\nB) Getting enough testers\nC) Writing clear bug reports\nD) Managing feedback effectively\n\nDrop your answer in the comments 👇",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 2,
+    "post_number": 3,
+    "hour": 9,
+    "text": "🛡️ One uncaught NullPointerException can cost you thousands of downloads.\n\nUsers leave 1-star reviews within minutes of a crash. Google Play's algorithm notices. Your visibility drops. And recovering from a bad launch takes weeks.\n\nProfessional testing isn't an expense. It's insurance for your...",
+    "post_media": "day2_post3.jpg",
+    "published": false
+  },
+  {
+    "day": 2,
+    "post_number": 4,
+    "hour": 15,
+    "text": "🎓 5 Common Android Bugs Found in Production:\n\n1. Memory leaks in background services\n2. Fragment lifecycle mismatches\n3. Network request failures on slow connections\n4. Permission handling on Android 13+\n5. Deep link routing errors\n\nWhich one have you encountered most?",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 3,
+    "post_number": 5,
+    "hour": 9,
+    "text": "🎓 How to Set Up Google Play Closed Testing (Step-by-Step):\n\n1. Go to Play Console → Testing → Closed testing\n2. Create a new track and name it\n3. Upload your AAB/APK\n4. Add tester emails or create a Google Group\n5. Share the opt-in link with your testers\n6. Monitor crashes and feedback in the...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 3,
+    "post_number": 6,
+    "hour": 15,
+    "text": "💬 Share your testing stack in the comments 👇\n\nWhat tools do you use for Android testing?\n\n• Espresso / UI Automator\n• Firebase Test Lab\n• Appium\n• Manual QA\n• Something else?\n\nLet's see what the community trusts most.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 4,
+    "post_number": 7,
+    "hour": 9,
+    "text": "🛡️ A 5-star rating doesn't happen by accident.\n\nBehind every top-rated app is a rigorous testing process. Testers explore edge cases, simulate real-world conditions, and catch what automated scripts miss.\n\nThe best developers don't ship faster. They ship smarter.\n\n#PlayTestPro #AppQuality",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 4,
+    "post_number": 8,
+    "hour": 15,
+    "text": "🎓 Test Case vs Test Scenario — What's the Difference?\n\nTest Scenario: What to test (e.g., \"User login flow\")\nTest Case: How to test it step-by-step (e.g., \"Enter valid email → Tap login → Verify dashboard opens\")\n\nStart with scenarios. Break them into cases. Execute with precision.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 5,
+    "post_number": 9,
+    "hour": 9,
+    "text": "🎓 Manual vs Automated Testing — When to Use What?\n\nManual Testing:\n✅ UI/UX evaluation\n✅ Exploratory testing\n✅ One-time features\n\nAutomated Testing:\n✅ Regression testing\n✅ Repetitive flows\n✅ CI/CD pipelines\n\nThe winning strategy? Combine both.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 5,
+    "post_number": 10,
+    "hour": 15,
+    "text": "📢 Meet PlayTest Pro 🔍\n\nWe specialize in professional testing for Android apps, with deep expertise in Google Play Closed Testing.\n\n✅ Real devices, real testers\n✅ Detailed bug reports with reproduction steps\n✅ Play Console compliance checks\n✅ Quick turnaround for tight deadlines\n\nDevelopers deserve...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 6,
+    "post_number": 11,
+    "hour": 9,
+    "text": "🛡️ Behind the Scenes: A Day in Testing 📋\n\nOur testers check:\n• Installation from multiple sources\n• First-time user experience (FTUE)\n• Background/foreground switching\n• Low battery and airplane mode behavior\n• Different screen sizes and orientations\n\nWe test like real users use apps —...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 6,
+    "post_number": 12,
+    "hour": 15,
+    "text": "🎓 What is Regression Testing?\n\nWhen you fix one bug, you might introduce another. Regression testing ensures new changes don't break existing features.\n\nBest practice: Run your core user flow tests after every significant update.\n\nAutomation makes this sustainable. Manual testing makes it thorough.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 7,
+    "post_number": 13,
+    "hour": 9,
+    "text": "💬 Sunday Challenge 🎯\n\nTest one feature of your app on a device you haven't used before. Different manufacturer, older OS version, or smaller screen.\n\nDid anything break? Share what you found 👇",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 7,
+    "post_number": 14,
+    "hour": 15,
+    "text": "🎓 How to Write Bug Reports Developers Actually Love:\n\n1. Clear, reproducible title\n2. Environment details (device, OS, app version)\n3. Step-by-step reproduction\n4. Expected vs actual result\n5. Screenshots or screen recordings\n6. Severity and priority labels\n\nA good bug report saves hours of...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 8,
+    "post_number": 15,
+    "hour": 9,
+    "text": "🎓 UI/UX Testing Checklist for Android Apps:\n\n□ Consistent Material Design components\n□ Touch targets at least 48dp\n□ Dark mode compatibility\n□ Font scaling up to 200%\n□ Landscape and portrait layouts\n□ Gesture navigation support\n\nUsers notice polish more than features.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 8,
+    "post_number": 16,
+    "hour": 15,
+    "text": "💬 Q&A Session Announcement! 🎙️\n\nThis Friday, we're answering your testing questions. Drop them below and we'll cover the best ones.\n\nTopics: Google Play testing, bug reporting, test automation, release strategy — anything related to shipping quality Android apps.\n\n#AskPlayTestPro",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 9,
+    "post_number": 17,
+    "hour": 9,
+    "text": "🛡️ Before & After Testing 📊\n\nBefore: Developer tests on personal device, assumes it works everywhere. App launches. 1-star reviews pour in. Rating drops.\n\nAfter: Professional testing across devices. Bugs caught early. Clean launch. Positive reviews. Algorithm boost.\n\nThe difference? Investment in...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 9,
+    "post_number": 18,
+    "hour": 15,
+    "text": "🎓 Performance Testing Basics:\n\n• Cold start time (target: < 2 seconds)\n• Memory usage during heavy operations\n• Battery drain during background tasks\n• Frame rate stability (60fps target)\n• Network usage efficiency\n\nTest under real conditions, not just emulators.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 10,
+    "post_number": 19,
+    "hour": 9,
+    "text": "🎓 Security Testing for Android Apps:\n\n□ SSL pinning implementation\n□ Root detection and response\n□ Sensitive data in logs\n□ Local storage encryption\n□ OAuth token handling\n□ Code obfuscation (R8/ProGuard)\n\nSecurity isn't a feature. It's a foundation.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 10,
+    "post_number": 20,
+    "hour": 15,
+    "text": "💬 Myth vs Reality — Testing Edition 🎭\n\nMyth: \"My app is small, I don't need testing.\"\nReality: Small apps get reviewed too. One crash = bad first impression.\n\nMyth: \"Emulators are enough.\"\nReality: Real devices behave differently. Always test on hardware.\n\nMyth: \"Users will report bugs.\"\nReality:...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 11,
+    "post_number": 21,
+    "hour": 9,
+    "text": "🛡️ Test Coverage — What Do the Numbers Mean?\n\nCode coverage tells you how much code your tests touch. But 100% coverage doesn't mean zero bugs.\n\nWhat matters more:\n• Covering critical user paths\n• Testing boundary conditions\n• Validating real-world scenarios\n\nQuality over quantity, always.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 11,
+    "post_number": 22,
+    "hour": 15,
+    "text": "🎓 Integration Testing Explained:\n\nYour app doesn't work in isolation. It talks to APIs, databases, and third-party services.\n\nIntegration testing verifies these connections work together correctly.\n\nKey areas:\n• API response handling\n• Database read/write operations\n• Payment gateway flows\n• Push...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 12,
+    "post_number": 23,
+    "hour": 9,
+    "text": "📢 Free Download: Android Pre-Launch Testing Checklist ✅\n\nGet our comprehensive checklist covering:\n• Functional testing\n• UI/UX validation\n• Performance benchmarks\n• Play Store compliance\n• Security essentials\n\nLink in bio / DM \"CHECKLIST\" to receive it instantly.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 12,
+    "post_number": 24,
+    "hour": 15,
+    "text": "🛡️ Why Development Teams Choose PlayTest Pro:\n\n🎯 We understand Google Play's review process firsthand\n📱 We test on real devices, not just emulators\n📝 We deliver reports developers can act on immediately\n⏱️ We respect your release deadlines\n\nWe're not just testers. We're an extension of your QA team.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 13,
+    "post_number": 25,
+    "hour": 9,
+    "text": "💬 Guess the Bug! 🐛\n\nScenario: Your app works perfectly on your test device. But users on Android 12 report crashes on launch.\n\nWhat's the most likely cause?\n\nA) Missing exported=\"true\" on activity\nB) Incorrect minSdkVersion\nC) Missing adaptive icon\nD) Firebase dependency conflict\n\nAnswer revealed...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 13,
+    "post_number": 26,
+    "hour": 15,
+    "text": "👥 Community Spotlight 💡\n\nEvery app started as an idea. Every successful launch started with testing.\n\nTag a developer friend who's shipping an app soon. They need to see this channel.\n\nSharing knowledge helps the whole Android community grow 🚀",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 14,
+    "post_number": 27,
+    "hour": 9,
+    "text": "🎓 Firebase Test Lab: What You Need to Know\n\nGoogle's cloud testing service runs your app on real devices across brands, OS versions, and screen sizes.\n\nBest for:\n• Compatibility testing\n• Stress testing with many devices\n• Quick smoke tests before release\n\nCombine with manual testing for best...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 14,
+    "post_number": 28,
+    "hour": 15,
+    "text": "🎓 Top Android Test Automation Frameworks (2025):\n\n1. Espresso — Fast, reliable UI testing\n2. UI Automator — Cross-app testing\n3. Appium — Cross-platform flexibility\n4. Shot — Screenshot testing\n5. Maestro — Modern, simple syntax\n\nChoose based on your stack and team expertise.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 15,
+    "post_number": 29,
+    "hour": 9,
+    "text": "🛡️ Case Study: The App That Launched Clean 🏆\n\nA client came to us with 3 days until launch. One critical bug remained unreproducible on their end.\n\nWe identified a race condition on Samsung devices running Android 13. Fixed. Verified on 12 real devices. Launched with zero crash reports in the...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 15,
+    "post_number": 30,
+    "hour": 15,
+    "text": "🎓 Compatibility Testing: The Full Picture\n\nYour app needs to work on:\n• Different manufacturers (Samsung, Xiaomi, Pixel, OnePlus)\n• Various Android versions (10 through 15)\n• Multiple screen sizes and densities\n• Different network conditions (3G, 4G, WiFi, offline)\n\nOne device is a sample. Ten...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 16,
+    "post_number": 31,
+    "hour": 9,
+    "text": "🎓 Accessibility Testing Checklist:\n\n□ Screen reader compatibility (TalkBack)\n□ Content descriptions for images\n□ Sufficient color contrast (4.5:1 minimum)\n□ Focus navigation via keyboard/D-pad\n□ Dynamic text sizing support\n\nAccessibility improves UX for everyone, not just users with disabilities.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 16,
+    "post_number": 32,
+    "hour": 15,
+    "text": "🎓 Closed Testing vs Beta Testing — What's Different?\n\nClosed Testing:\n• Invitation-only, up to 100 testers\n• No public listing\n• Ideal for early-stage validation\n• Required before production release\n\nBeta Testing (Open Testing):\n• Public opt-in, unlimited testers\n• Listed on Play Store\n• Broader...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 17,
+    "post_number": 33,
+    "hour": 9,
+    "text": "🛡️ The ROI of Professional Testing\n\nInvesting in testing before launch prevents:\n• Bad reviews that live forever\n• Revenue loss from uninstalls\n• Expensive emergency patches\n• Reputational damage to your brand\n\nProfessional testing typically costs less than recovering from a failed...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 17,
+    "post_number": 34,
+    "hour": 15,
+    "text": "🎓 API Testing Essentials for Mobile Developers:\n\n• Verify status codes and response times\n• Test with invalid tokens and expired sessions\n• Simulate slow and interrupted connections\n• Validate data structure consistency\n• Check error message clarity\n\nYour app is only as reliable as the APIs it...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 18,
+    "post_number": 35,
+    "hour": 9,
+    "text": "📢 🎁 Free 30-Minute Testing Consultation\n\nLaunching soon? Stuck with a bug? Not sure about your testing strategy?\n\nBook a free call with our testing team. No commitment, no sales pitch.\n\nJust actionable advice from people who test Android apps every day.\n\nDM \"CONSULT\" to schedule.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 18,
+    "post_number": 36,
+    "hour": 15,
+    "text": "📢 Why PlayTest Pro?\n\nWe don't just find bugs. We help you ship with confidence.\n\n• Deep Google Play testing expertise\n• Fast turnaround without compromising quality\n• Reports that developers actually use\n• Competitive pricing for independent devs and teams\n\nYour app deserves professional eyes on...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 19,
+    "post_number": 37,
+    "hour": 9,
+    "text": "💬 Testing Quiz 🧠\n\nTrue or False?\n\n1. Closed testing is mandatory before Play Store production release.\n2. You need at least 50 testers for closed testing.\n3. Closed testing feedback affects your Play Store rating.\n\nAnswers posted tomorrow!",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 19,
+    "post_number": 38,
+    "hour": 15,
+    "text": "🎓 Developer Tip of the Day:\n\nAlways test your release build, not just debug.\n\nRelease builds have:\n• Code obfuscation enabled\n• Different signing certificates\n• Optimized resource handling\n• ProGuard/R8 transformations\n\nBugs that don't exist in debug can appear only in release.\n\nBuild variants...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 20,
+    "post_number": 39,
+    "hour": 9,
+    "text": "🎓 Stress Testing: Push Your App to the Limit\n\n• Launch multiple instances rapidly\n• Fill device storage and test behavior\n• Switch networks mid-transaction\n• Handle rapid user input sequences\n• Process thousands of notification triggers\n\nIf your app survives stress, users will trust it.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 20,
+    "post_number": 40,
+    "hour": 15,
+    "text": "🎓 Google Play Policy Compliance Checklist:\n\n□ No deceptive behavior or hidden functionality\n□ Proper data handling disclosures\n□ Accurate app descriptions and screenshots\n□ In-app purchase compliance\n□ Target API level requirements met\n\nPolicy rejections waste time. Review this list before every...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 21,
+    "post_number": 41,
+    "hour": 9,
+    "text": "🛡️ Our Testing Checklist Walkthrough (Sneak Peek)\n\nEvery app we test goes through 200+ checkpoints across:\n• Installation & onboarding\n• Core features & edge cases\n• Performance under pressure\n• Platform-specific behaviors\n• Play Store readiness\n\nThoroughness isn't optional when your reputation is...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 21,
+    "post_number": 42,
+    "hour": 15,
+    "text": "🛡️ Real Feedback Examples We Deliver:\n\n❌ \"It doesn't work\" \n✅ \"Login fails on Android 14 with specific locales. Steps to reproduce...\"\n\n❌ \"App is slow\"\n✅ \"Settings screen takes 4.2s to load on mid-range devices. Screenshot and logcat attached.\"\n\nClear feedback leads to faster fixes.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 22,
+    "post_number": 43,
+    "hour": 9,
+    "text": "🎓 Database Testing for Android:\n\n□ CRUD operations work correctly\n□ Migration scripts test successfully\n□ Concurrent access handled properly\n□ Data persists after app restart\n□ Corrupted state recovery works\n\nYour local database is where user trust lives. Test it carefully.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 22,
+    "post_number": 44,
+    "hour": 15,
+    "text": "🎓 Network Condition Testing:\n\nDon't assume perfect WiFi. Test on:\n• 2G/3G/4G/5G\n• Airplane mode transitions\n• Intermittent connection drops\n• High latency (300ms+)\n• DNS failures\n\nNetwork-aware apps keep users engaged even offline.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 23,
+    "post_number": 45,
+    "hour": 9,
+    "text": "🛡️ The Hidden Cost of Skipping Testing\n\nDirect costs:\n• Emergency patches\n• Customer support burden\n• Lost user acquisition spend\n\nIndirect costs:\n• Lower lifetime value per user\n• Slower iteration cycles\n• Team burnout from firefighting\n\nTesting isn't an expense. It's risk management.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 23,
+    "post_number": 46,
+    "hour": 15,
+    "text": "🎓 Continuous Testing in CI/CD:\n\n1. Developer pushes code\n2. Automated tests run\n3. Reports generated instantly\n4. Issues caught before merge\n5. Clean builds deploy automatically\n\nAutomation + Human testing = Unbeatable quality assurance",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 24,
+    "post_number": 47,
+    "hour": 9,
+    "text": "📢 💬 Client Spotlight\n\n\"PlayTest Pro caught 12 issues in two days that our internal team missed in two weeks. Worth every penny.\"\n\n— Independent Android Developer, Health & Fitness App (50K+ downloads)\n\nResults matter. Your app matters. Let's talk.\n\nDM us for details.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 24,
+    "post_number": 48,
+    "hour": 15,
+    "text": "📢 PlayTest Pro Service Packages:\n\n🟢 Starter — Quick smoke test before launch (2-3 days)\n🟡 Professional — Full functional + compatibility testing (5-7 days)\n🔴 Enterprise — End-to-end testing + Play Store compliance (7-10 days)\n\nEvery package includes real devices, detailed reports, and direct...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 25,
+    "post_number": 49,
+    "hour": 9,
+    "text": "💬 Share Your Setup! 🛠️\n\nIDE: Android Studio / IntelliJ / Other\nTesting: Espresso / Appium / Manual\nCI/CD: GitHub Actions / Bitrise / Jenkins / None\nDevices: Emulators only / 1-2 real devices / Test lab\n\nWhat's your current testing workflow? Let's learn from each other 👇",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 25,
+    "post_number": 50,
+    "hour": 15,
+    "text": "💬 Weekly Recap 📰\n\nThis week we covered:\n✅ Database & network testing tips\n✅ CI/CD integration for testing\n✅ Real client results\n✅ Our service packages\n\nWhat topic should we dive deeper into next week? Suggest below! 👇",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 26,
+    "post_number": 51,
+    "hour": 9,
+    "text": "🎓 Localization Testing: Beyond Translation\n\n□ Text doesn't overflow in German (30% longer)\n□ RTL layouts work for Arabic/Hebrew\n□ Dates, currencies, and numbers formatted correctly\n• Emoji rendering across devices\n□ Search handles accented characters\n\nA localized app feels native. A translated app...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 26,
+    "post_number": 52,
+    "hour": 15,
+    "text": "🎓 Deep Link Testing Checklist:\n\n□ Links open correct screens from external apps\n□ Invalid deep links handled gracefully\n□ Deferred deep links work after install\n□ App indexing verification passed\n□ Multiple entry points tested consistently\n\nBroken deep links = lost users and revenue.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 27,
+    "post_number": 53,
+    "hour": 9,
+    "text": "🛡️ Testing by the Numbers 📊\n\nApps with professional testing before launch see:\n• 45% fewer crash reports in the first month\n• 30% better user retention in week one\n• 60% faster resolution of critical bugs\n• 3x fewer negative Play Store reviews\n\nQuality is quantifiable. Good testing is measurable.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 27,
+    "post_number": 54,
+    "hour": 15,
+    "text": "🛡️ How Testing Prevents Play Store Rejection\n\nCommon rejection reasons we catch during testing:\n• Crashes on launch\n• Misleading screenshots\n• Missing privacy policy links\n• Broken functionality in core paths\n• Policy-violating content\n\nEvery rejection delays your launch. Testing prevents that.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 28,
+    "post_number": 55,
+    "hour": 9,
+    "text": "🎓 Battery Drain Testing:\n\n□ Measure baseline consumption\n□ Monitor during background sync\n□ Test location services usage\n□ Check wake locks and alarms\n□ Profile with Battery Historian\n\nUsers uninstall battery-hungry apps. Test before they notice.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 28,
+    "post_number": 56,
+    "hour": 15,
+    "text": "🎓 Push Notification Testing:\n\n□ Delivered on time across channels\n□ Deep link from notification works\n□ Grouped properly in notification shade\n□ Dismiss and reply actions functional\n□ Throttling handled gracefully\n\nNotifications are a critical UX touchpoint. Don't neglect them.",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 29,
+    "post_number": 57,
+    "hour": 9,
+    "text": "🛡️ Before You Launch Checklist:\n\n□ Closed testing completed with feedback addressed\n□ Crash-free sessions on target devices\n□ Release build tested, not debug\n□ Play Store assets finalized\n□ Privacy policy and terms updated\n□ Rating questionnaire prepared\n□ Rollout strategy planned (staged vs...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 29,
+    "post_number": 58,
+    "hour": 15,
+    "text": "🎓 Testing Maturity Model:\n\nLevel 1: No testing, rely on users\nLevel 2: Manual testing on personal device\nLevel 3: Multiple devices, structured testing\nLevel 4: Automated + manual testing integrated\nLevel 5: Full CI/CD with automated quality gates\n\nWhat level is your team at? What would it take to...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 30,
+    "post_number": 59,
+    "hour": 9,
+    "text": "💬 30 Days of Testing Knowledge — Recap 🎓\n\nOver the past month we shared:\n• 15+ educational posts on testing practices\n• Real-world case studies and data\n• Community challenges and quizzes\n• Free resources and checklists\n• Actionable tips for every Android developer\n\nThank you for being part of...",
+    "post_media": "",
+    "published": false
+  },
+  {
+    "day": 30,
+    "post_number": 60,
+    "hour": 15,
+    "text": "🚀 Ready to Ship with Confidence?\n\nYou've consumed 30 days of testing wisdom. Now it's time to put it to work.\n\nPlayTest Pro helps Android developers launch clean, tested apps through Google Play's closed testing and beyond.\n\n✅ Free consultation\n✅ Real device testing\n✅ Developer-friendly...",
+    "post_media": "",
+    "published": false
+  }
+]
