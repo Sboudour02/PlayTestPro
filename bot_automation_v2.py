@@ -697,42 +697,59 @@ async def cmd_x_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 @admin_only
 async def cmd_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """/stats — Show detailed analytics for Telegram & X"""
-    # Telegram stats
+    """/stats — Show detailed analytics for Telegram"""
     posts = context.application.bot_data.get("posts", [])
     poster = context.application.bot_data.get("poster")
     db = poster.db if poster else AnalyticsDB()
-    tg_stats = db.get_stats()
-    tg_total = len(posts)
-    tg_published = sum(1 for p in posts if p.get("published"))
-    tg_remaining = tg_total - tg_published
-    tg_days = len(set(p.get("day") for p in posts if not p.get("published")))
-    next_tg = get_next_unpublished(posts)
-    tg_next = f"\n📌 Next: Day {next_tg['day']}, Post #{next_tg['post_number']}" if next_tg else ""
 
-    # X stats
-    x_mgr = context.application.bot_data.get("x_mgr")
-    if x_mgr:
-        x_total = len(x_mgr.posts)
-        x_published = sum(1 for p in x_mgr.posts if p.get("published"))
-        x_remaining = x_total - x_published
-        next_x = x_mgr.get_next_unpublished()
-        x_next = f"\n📌 Next: Day {next_x['day']}, Post #{next_x['post_number']}" if next_x else ""
-        x_block = (
-            f"\n\n🐦 <b>X (Twitter)</b>\n"
-            f"📚 Total: {x_total}  |  ✅ Published: {x_published}  |  ⏳ Remaining: {x_remaining}"
-            f"{x_next}"
-        )
-    else:
-        x_block = "\n\n🐦 X: ❌ Not configured"
+    stats = db.get_stats()
+    total = len(posts)
+    published = sum(1 for p in posts if p.get("published"))
+    remaining = total - published
+    next_post = get_next_unpublished(posts)
+
+    days_with_posts = len(set(p.get("day") for p in posts if not p.get("published")))
+
+    next_info = ""
+    if next_post:
+        next_info = f"\n📌 Next: Day {next_post['day']}, Post #{next_post['post_number']}"
 
     await update.message.reply_text(
         f"📈 <b>PlayTest Pro Analytics</b>\n\n"
-        f"📱 <b>Telegram</b>\n"
-        f"📚 Total: {tg_total}  |  ✅ Published: {tg_published}  |  ⏳ Remaining: {tg_remaining}\n"
-        f"📅 Days with pending: {tg_days}  |  ❌ Failed: {tg_stats.get('failed', 0)}"
-        f"{tg_next}"
-        f"{x_block}",
+        f"📚 Total Posts: {total}\n"
+        f"✅ Published: {published}\n"
+        f"⏳ Remaining: {remaining}\n"
+        f"📅 Days with pending posts: {days_with_posts}\n"
+        f"❌ Failed: {stats.get('failed', 0)}\n"
+        f"🕐 Last Post: {stats.get('last_post') or 'N/A'}"
+        f"{next_info}",
+        parse_mode=ParseMode.HTML
+    )
+
+
+@admin_only
+async def cmd_xstats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """/xstats — Show detailed analytics for X"""
+    x_poster = context.application.bot_data.get("x_poster")
+    x_mgr = context.application.bot_data.get("x_mgr")
+    if not x_poster or not x_poster.enabled:
+        await update.message.reply_text("🐦 <b>X Status</b>\n\n❌ Not configured or disabled.", parse_mode=ParseMode.HTML)
+        return
+
+    total = len(x_mgr.posts) if x_mgr else 0
+    published = sum(1 for p in x_mgr.posts if p.get("published")) if x_mgr else 0
+    remaining = total - published
+    next_x = x_mgr.get_next_unpublished() if x_mgr else None
+    next_info = ""
+    if next_x:
+        next_info = f"\n📌 Next: Day {next_x['day']}, Post #{next_x['post_number']}"
+
+    await update.message.reply_text(
+        f"🐦 <b>PlayTest Pro — X Analytics</b>\n\n"
+        f"📚 Total Posts: {total}\n"
+        f"✅ Published: {published}\n"
+        f"⏳ Remaining: {remaining}"
+        f"{next_info}",
         parse_mode=ParseMode.HTML
     )
 
@@ -939,6 +956,7 @@ async def main():
     app.add_handler(CommandHandler("stats", cmd_stats))
     app.add_handler(CommandHandler("scan_media", cmd_scan_media))
     app.add_handler(CommandHandler("x_status", cmd_x_status))
+    app.add_handler(CommandHandler("xstats", cmd_xstats))
     app.add_handler(CommandHandler("x_now", cmd_x_now))
     app.add_handler(CommandHandler("x_skip", cmd_x_skip))
     app.add_handler(CallbackQueryHandler(cmd_platform_choice, pattern="^platform_"))
