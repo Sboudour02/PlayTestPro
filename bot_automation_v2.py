@@ -17,12 +17,17 @@ from datetime import datetime, timedelta, timezone
 from functools import wraps
 
 # ── ENV ──
+SCRIPT_DIR = Path(__file__).parent.resolve()
 try:
     from dotenv import load_dotenv
-    load_dotenv()
-    # Fallback: load env.prod if core vars still missing (for deployment)
-    if not os.getenv("TELEGRAM_BOT_TOKEN") or not os.getenv("TELEGRAM_CHANNEL_ID"):
-        load_dotenv("env.prod")
+    env_path = SCRIPT_DIR / ".env"
+    if env_path.exists():
+        load_dotenv(env_path)
+    else:
+        # Fallback: load env.prod (Railway deploy) using absolute path
+        prod_path = SCRIPT_DIR / "env.prod"
+        if prod_path.exists():
+            load_dotenv(prod_path)
 except ImportError:
     pass
 
