@@ -697,32 +697,42 @@ async def cmd_x_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 @admin_only
 async def cmd_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """/stats — Show detailed analytics"""
+    """/stats — Show detailed analytics for Telegram & X"""
+    # Telegram stats
     posts = context.application.bot_data.get("posts", [])
     poster = context.application.bot_data.get("poster")
     db = poster.db if poster else AnalyticsDB()
+    tg_stats = db.get_stats()
+    tg_total = len(posts)
+    tg_published = sum(1 for p in posts if p.get("published"))
+    tg_remaining = tg_total - tg_published
+    tg_days = len(set(p.get("day") for p in posts if not p.get("published")))
+    next_tg = get_next_unpublished(posts)
+    tg_next = f"\n📌 Next: Day {next_tg['day']}, Post #{next_tg['post_number']}" if next_tg else ""
 
-    stats = db.get_stats()
-    total = len(posts)
-    published = sum(1 for p in posts if p.get("published"))
-    remaining = total - published
-    next_post = get_next_unpublished(posts)
-
-    days_with_posts = len(set(p.get("day") for p in posts if not p.get("published")))
-
-    next_info = ""
-    if next_post:
-        next_info = f"\n📌 Next: Day {next_post['day']}, Post #{next_post['post_number']}"
+    # X stats
+    x_mgr = context.application.bot_data.get("x_mgr")
+    if x_mgr:
+        x_total = len(x_mgr.posts)
+        x_published = sum(1 for p in x_mgr.posts if p.get("published"))
+        x_remaining = x_total - x_published
+        next_x = x_mgr.get_next_unpublished()
+        x_next = f"\n📌 Next: Day {next_x['day']}, Post #{next_x['post_number']}" if next_x else ""
+        x_block = (
+            f"\n\n🐦 <b>X (Twitter)</b>\n"
+            f"📚 Total: {x_total}  |  ✅ Published: {x_published}  |  ⏳ Remaining: {x_remaining}"
+            f"{x_next}"
+        )
+    else:
+        x_block = "\n\n🐦 X: ❌ Not configured"
 
     await update.message.reply_text(
         f"📈 <b>PlayTest Pro Analytics</b>\n\n"
-        f"📚 Total Posts: {total}\n"
-        f"✅ Published: {published}\n"
-        f"⏳ Remaining: {remaining}\n"
-        f"📅 Days with pending posts: {days_with_posts}\n"
-        f"❌ Failed: {stats.get('failed', 0)}\n"
-        f"🕐 Last Post: {stats.get('last_post') or 'N/A'}"
-        f"{next_info}",
+        f"📱 <b>Telegram</b>\n"
+        f"📚 Total: {tg_total}  |  ✅ Published: {tg_published}  |  ⏳ Remaining: {tg_remaining}\n"
+        f"📅 Days with pending: {tg_days}  |  ❌ Failed: {tg_stats.get('failed', 0)}"
+        f"{tg_next}"
+        f"{x_block}",
         parse_mode=ParseMode.HTML
     )
 
