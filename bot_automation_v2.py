@@ -52,6 +52,13 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID", "").strip()
 ADMIN_USER_ID = os.getenv("ADMIN_USER_ID", "").strip()
 
+# ── X (Twitter) API ──
+X_API_KEY = os.getenv("X_API_KEY", "").strip()
+X_API_SECRET = os.getenv("X_API_SECRET", "").strip()
+X_ACCESS_TOKEN = os.getenv("X_ACCESS_TOKEN", "").strip()
+X_ACCESS_TOKEN_SECRET = os.getenv("X_ACCESS_TOKEN_SECRET", "").strip()
+X_BEARER_TOKEN = os.getenv("X_BEARER_TOKEN", "").strip()
+
 # ── RATE LIMITING ──
 MIN_DELAY_BETWEEN_POSTS = int(os.getenv("MIN_DELAY_BETWEEN_POSTS", "5"))
 MAX_RETRIES = int(os.getenv("MAX_RETRIES", "3"))
@@ -189,6 +196,51 @@ class TelegramPoster:
 
     async def post_now(self, text: str, **kwargs) -> dict:
         return await self.post_message(text, **kwargs)
+
+
+# ═══════════════════════════════════════════════════════════════
+#  X (TWITTER) POSTER
+# ═══════════════════════════════════════════════════════════════
+class XPoster:
+    def __init__(self):
+        self.client = None
+        self.enabled = False
+        self.last_tweet_id = None
+        if all([X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN, X_ACCESS_TOKEN_SECRET]):
+            try:
+                import tweepy
+                self.client = tweepy.Client(
+                    bearer_token=X_BEARER_TOKEN,
+                    consumer_key=X_API_KEY,
+                    consumer_secret=X_API_SECRET,
+                    access_token=X_ACCESS_TOKEN,
+                    access_token_secret=X_ACCESS_TOKEN_SECRET,
+                )
+                self.enabled = True
+                logger.info("🐦 X API initialized.")
+            except Exception as e:
+                logger.warning(f"⚠️ X API init failed: {e}")
+
+    async def post_tweet(self, text: str) -> dict:
+        if not self.enabled or not self.client:
+            return {"success": False, "error": "X API not configured"}
+        try:
+            response = await asyncio.to_thread(self.client.create_tweet, text=text)
+            tweet_id = response.data["id"]
+            self.last_tweet_id = tweet_id
+            logger.info(f"✅ Tweeted | ID: {tweet_id}")
+            return {"success": True, "tweet_id": tweet_id}
+        except Exception as e:
+            logger.error(f"❌ Tweet failed: {e}")
+            return {"success": False, "error": str(e)}
+
+    def build_tweet_text(self, post: dict) -> str:
+        text_en = post["text"]
+        day = post["day"]
+        post_num = post["post_number"]
+        channel_link = "https://t.me/QannasCore"
+        hashtags = "#PlayTest_Pro #AndroidDev #AppTesting"
+        return f"📢 New Post: Day {day}, #{post_num}\n\n{text_en[:200]}\n\n{hashtags}\n🔗 {channel_link}"
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -333,10 +385,19 @@ async def cmd_post_now(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if result.get("success"):
         post["published"] = True
         save_posts(posts)
+
+        x_result = ""
+        x_poster = context.application.bot_data.get("x_poster")
+        if x_poster and x_poster.enabled:
+            tweet_text = x_poster.build_tweet_text(post)
+            xr = await x_poster.post_tweet(tweet_text)
+            x_result = f"\n🐦 Tweet: {'✅' if xr.get('success') else '❌ ' + xr.get('error', '')}"
+
         await msg.edit_text(
             f"✅ <b>Posted!</b>\n\n"
             f"Day {post['day']}, Post #{post['post_number']}\n"
-            f"Message ID: {result['message_id']}",
+            f"Message ID: {result['message_id']}"
+            f"{x_result}",
             parse_mode=ParseMode.HTML
         )
     else:
@@ -386,6 +447,23 @@ async def cmd_scan_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 @admin_only
+async def cmd_x_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """/x_status — Show X (Twitter) integration status"""
+    x_poster = context.application.bot_data.get("x_poster")
+    if not x_poster or not x_poster.enabled:
+        await update.message.reply_text("🐦 <b>X Integration</b>\n\n❌ Not configured or disabled.", parse_mode=ParseMode.HTML)
+        return
+
+    last_tweet = x_poster.last_tweet_id or "N/A"
+    await update.message.reply_text(
+        f"🐦 <b>X Integration</b>\n\n"
+        f"✅ Enabled\n"
+        f"🆔 Last Tweet: {last_tweet}",
+        parse_mode=ParseMode.HTML
+    )
+
+
+@admin_only
 async def cmd_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """/stats — Show detailed analytics"""
     posts = context.application.bot_data.get("posts", [])
@@ -421,9 +499,10 @@ async def cmd_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
 #  SCHEDULER
 # ═══════════════════════════════════════════════════════════════
 class PostScheduler:
-    def __init__(self, poster: TelegramPoster, posts: list[dict]):
+    def __init__(self, poster: TelegramPoster, posts: list[dict], x_poster: XPoster = None):
         self.poster = poster
         self.posts = posts
+        self.x_poster = x_poster
         self.scheduler = None
         if AsyncIOScheduler and CronTrigger:
             self.scheduler = AsyncIOScheduler()
@@ -480,6 +559,11 @@ class PostScheduler:
                         json.dump(self.posts, f, ensure_ascii=False, indent=2)
                 except Exception as e:
                     logger.error(f"Failed to save published state: {e}")
+
+                # Also post to X if enabled
+                if self.x_poster and self.x_poster.enabled:
+                    tweet_text = self.x_poster.build_tweet_text(post)
+                    await self.x_poster.post_tweet(tweet_text)
 
             # Rate limit
             if i < len(today_posts) - 1:
@@ -572,6 +656,7 @@ async def main():
     # Init
     db = AnalyticsDB()
     poster = TelegramPoster(TELEGRAM_BOT_TOKEN, TELEGRAM_CHANNEL_ID, db)
+    x_poster = XPoster()
 
     # Load posts
     try:
@@ -595,15 +680,17 @@ async def main():
     app.bot_data["poster"] = poster
     app.bot_data["posts"] = posts
     app.bot_data["db"] = db
+    app.bot_data["x_poster"] = x_poster
 
     app.add_handler(CommandHandler("status", cmd_status))
     app.add_handler(CommandHandler("post_now", cmd_post_now))
     app.add_handler(CommandHandler("skip", cmd_skip))
     app.add_handler(CommandHandler("stats", cmd_stats))
     app.add_handler(CommandHandler("scan_media", cmd_scan_media))
+    app.add_handler(CommandHandler("x_status", cmd_x_status))
 
     # Setup scheduler
-    scheduler = PostScheduler(poster, posts)
+    scheduler = PostScheduler(poster, posts, x_poster)
     app.bot_data["scheduler"] = scheduler
     scheduler.start()
 
