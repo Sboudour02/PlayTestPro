@@ -63,6 +63,9 @@ FB_PAGE_ID = os.getenv("FB_PAGE_ID", "").strip()
 FB_PAGE_ACCESS_TOKEN = os.getenv("FB_PAGE_ACCESS_TOKEN", "").strip()
 FB_USER_ACCESS_TOKEN = os.getenv("FB_USER_ACCESS_TOKEN", "").strip()
 
+# ── PostgreSQL (persistent state) ──
+DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
+
 # ── RATE LIMITING ──
 MIN_DELAY_BETWEEN_POSTS = int(os.getenv("MIN_DELAY_BETWEEN_POSTS", "5"))
 MAX_RETRIES = int(os.getenv("MAX_RETRIES", "3"))
@@ -284,6 +287,66 @@ class FacebookPoster:
             return {"success": False, "error": str(e)}
 
 # ═══════════════════════════════════════════════════════════════
+#  POSTGRESQL STATE (persistent published tracking)
+# ═══════════════════════════════════════════════════════════════
+class PostgresState:
+    def __init__(self, dsn: str = None):
+        self.conn = None
+        self.enabled = False
+        if dsn:
+            try:
+                import psycopg2
+                self.conn = psycopg2.connect(dsn, sslmode="require")
+                self._init_table()
+                self.enabled = True
+                logger.info("✅ PostgresState connected.")
+            except Exception as e:
+                logger.warning(f"⚠️ PostgresState not available: {e}")
+
+    def _init_table(self):
+        with self.conn.cursor() as cur:
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS post_state (
+                    day INTEGER NOT NULL,
+                    post_number INTEGER NOT NULL,
+                    published_tg BOOLEAN DEFAULT FALSE,
+                    published_fb BOOLEAN DEFAULT FALSE,
+                    PRIMARY KEY (day, post_number)
+                )
+            """)
+            self.conn.commit()
+
+    def get_all_states(self) -> dict:
+        """Return {(day, post_number): {'tg': bool, 'fb': bool}}"""
+        if not self.enabled:
+            return {}
+        with self.conn.cursor() as cur:
+            cur.execute("SELECT day, post_number, published_tg, published_fb FROM post_state")
+            result = {}
+            for day, pn, tg, fb in cur.fetchall():
+                result[(day, pn)] = {"tg": tg, "fb": fb}
+            return result
+
+    def set_published(self, day: int, post_number: int, platform: str):
+        """platform: 'tg' or 'fb'"""
+        if not self.enabled:
+            return
+        col = "published_tg" if platform == "tg" else "published_fb"
+        with self.conn.cursor() as cur:
+            cur.execute(f"""
+                INSERT INTO post_state (day, post_number, {col})
+                VALUES (%s, %s, TRUE)
+                ON CONFLICT (day, post_number)
+                DO UPDATE SET {col} = TRUE
+            """, (day, post_number))
+            self.conn.commit()
+
+    def close(self):
+        if self.conn:
+            self.conn.close()
+
+
+# ═══════════════════════════════════════════════════════════════
 #  POST LOADING & VALIDATION
 # ═══════════════════════════════════════════════════════════════
 def load_posts(path: Path = POSTS_JSON_PATH) -> list[dict]:
@@ -347,6 +410,15 @@ def save_posts(posts: list) -> None:
             json.dump(posts, f, ensure_ascii=False, indent=2)
     except Exception as e:
         logger.error(f"Failed to save posts.json: {e}")
+
+
+def mark_and_save(post: dict, platform: str, posts: list, db_state: PostgresState = None):
+    """Mark post as published on platform, save to posts.json and Postgres."""
+    key = "published_fb" if platform == "fb" else "published"
+    post[key] = True
+    save_posts(posts)
+    if db_state and db_state.enabled:
+        db_state.set_published(post["day"], post["post_number"], platform)
 
 
 async def post_to_telegram(poster, post, msg_to_edit=None) -> dict:
@@ -473,6 +545,7 @@ async def cmd_platform_choice(update: Update, context: ContextTypes.DEFAULT_TYPE
     posts = context.application.bot_data.get("posts", [])
     poster = context.application.bot_data.get("poster")
     fb_poster = context.application.bot_data.get("fb_poster")
+    db_state = context.application.bot_data.get("db_state")
 
     # Find the post
     post = None
@@ -493,8 +566,7 @@ async def cmd_platform_choice(update: Update, context: ContextTypes.DEFAULT_TYPE
     if choice in ("platform_tg", "platform_both"):
         result = await post_to_telegram(poster, post)
         if result.get("success"):
-            post["published"] = True
-            save_posts(posts)
+            mark_and_save(post, "tg", posts, db_state)
             results.append(f"📱 Telegram: ✅ (ID: {result['message_id']})")
         else:
             results.append(f"📱 Telegram: ❌ {result.get('error', '')}")
@@ -502,8 +574,7 @@ async def cmd_platform_choice(update: Update, context: ContextTypes.DEFAULT_TYPE
     if choice in ("platform_fb", "platform_both"):
         result = await post_to_fb(fb_poster, post)
         if result.get("success"):
-            post["published_fb"] = True
-            save_posts(posts)
+            mark_and_save(post, "fb", posts, db_state)
             results.append(f"📘 Facebook: ✅ (ID: {result['post_id']})")
         else:
             results.append(f"📘 Facebook: ❌ {result.get('error', '')}")
@@ -518,13 +589,13 @@ async def cmd_platform_choice(update: Update, context: ContextTypes.DEFAULT_TYPE
 async def cmd_skip(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """/skip — Mark the next unpublished post as skipped"""
     posts = context.application.bot_data.get("posts", [])
+    db_state = context.application.bot_data.get("db_state")
     post = get_next_unpublished(posts)
     if not post:
         await update.message.reply_text("✅ All posts have been published or skipped!")
         return
 
-    post["published"] = True
-    save_posts(posts)
+    mark_and_save(post, "tg", posts, db_state)
     await update.message.reply_text(
         f"⏭️ <b>Skipped</b>\n\n"
         f"Day {post['day']}, Post #{post['post_number']} marked as published.",
@@ -667,8 +738,7 @@ async def cmd_fb_now(update: Update, context: ContextTypes.DEFAULT_TYPE):
     result = await fb_poster.post_with_photo(text, media_path)
 
     if result.get("success"):
-        post["published_fb"] = True
-        save_posts(posts)
+        mark_and_save(post, "fb", posts, context.application.bot_data.get("db_state"))
         await msg.edit_text(
             f"✅ <b>Posted to Facebook!</b>\n\n"
             f"Day {post['day']}, Post #{post['post_number']}\n"
@@ -686,13 +756,13 @@ async def cmd_fb_now(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def cmd_fb_skip(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """/fb_skip — Mark the next unpublished post as published on Facebook"""
     posts = context.application.bot_data.get("posts", [])
+    db_state = context.application.bot_data.get("db_state")
     post = get_next_unpublished(posts, "published_fb")
     if not post:
         await update.message.reply_text("✅ All Facebook posts have been published or skipped!")
         return
 
-    post["published_fb"] = True
-    save_posts(posts)
+    mark_and_save(post, "fb", posts, db_state)
     await update.message.reply_text(
         f"⏭️ <b>Skipped on Facebook</b>\n\n"
         f"Day {post['day']}, Post #{post['post_number']} marked as published.",
@@ -704,10 +774,11 @@ async def cmd_fb_skip(update: Update, context: ContextTypes.DEFAULT_TYPE):
 #  SCHEDULER
 # ═══════════════════════════════════════════════════════════════
 class PostScheduler:
-    def __init__(self, poster: TelegramPoster, posts: list[dict], fb_poster: FacebookPoster = None):
+    def __init__(self, poster: TelegramPoster, posts: list[dict], fb_poster: FacebookPoster = None, db_state: PostgresState = None):
         self.poster = poster
         self.posts = posts
         self.fb_poster = fb_poster
+        self.db_state = db_state
         self.scheduler = None
         if AsyncIOScheduler and CronTrigger:
             self.scheduler = AsyncIOScheduler()
@@ -758,12 +829,7 @@ class PostScheduler:
 
             # Mark as published in posts.json if successful
             if result.get("success"):
-                post["published"] = True
-                try:
-                    with open(POSTS_JSON_PATH, "w", encoding="utf-8") as f:
-                        json.dump(self.posts, f, ensure_ascii=False, indent=2)
-                except Exception as e:
-                    logger.error(f"Failed to save published state: {e}")
+                mark_and_save(post, "tg", self.posts, self.db_state)
 
                 # Also post to Facebook if enabled and not already posted
                 if self.fb_poster and self.fb_poster.enabled and not post.get("published_fb"):
@@ -772,12 +838,7 @@ class PostScheduler:
                     media_path = MEDIA_DIR / media_file if media_file else None
                     fr = await self.fb_poster.post_with_photo(text, media_path)
                     if fr.get("success"):
-                        post["published_fb"] = True
-                        try:
-                            with open(POSTS_JSON_PATH, "w", encoding="utf-8") as f:
-                                json.dump(self.posts, f, ensure_ascii=False, indent=2)
-                        except Exception as e:
-                            logger.error(f"Failed to save FB published state: {e}")
+                        mark_and_save(post, "fb", self.posts, self.db_state)
 
             # Rate limit
             if i < len(today_posts) - 1:
@@ -871,6 +932,7 @@ async def main():
     db = AnalyticsDB()
     poster = TelegramPoster(TELEGRAM_BOT_TOKEN, TELEGRAM_CHANNEL_ID, db)
     fb_poster = FacebookPoster()
+    db_state = PostgresState(DATABASE_URL or None)
 
     # Load posts
     try:
@@ -881,6 +943,23 @@ async def main():
 
     if not validate_posts(posts):
         sys.exit(1)
+
+    # Merge persistent states from PostgreSQL into posts
+    if db_state.enabled:
+        states = db_state.get_all_states()
+        merged_tg = merged_fb = 0
+        for p in posts:
+            key = (p["day"], p["post_number"])
+            if key in states:
+                if states[key]["tg"]:
+                    p["published"] = True
+                    merged_tg += 1
+                if states[key]["fb"]:
+                    p["published_fb"] = True
+                    merged_fb += 1
+        if merged_tg or merged_fb:
+            logger.info(f"🔁 Merged states from DB: {merged_tg} TG, {merged_fb} FB")
+        save_posts(posts)
 
     logger.info(f"📚 Loaded {len(posts)} posts. Facebook: {'Enabled' if fb_poster.enabled else 'Not configured'}")
 
@@ -895,6 +974,7 @@ async def main():
     app.bot_data["posts"] = posts
     app.bot_data["db"] = db
     app.bot_data["fb_poster"] = fb_poster
+    app.bot_data["db_state"] = db_state
 
     app.add_handler(CommandHandler("status", cmd_status))
     app.add_handler(CommandHandler("post_now", cmd_post_now))
@@ -908,7 +988,7 @@ async def main():
     app.add_handler(CallbackQueryHandler(cmd_platform_choice, pattern="^platform_"))
 
     # Setup scheduler
-    scheduler = PostScheduler(poster, posts, fb_poster)
+    scheduler = PostScheduler(poster, posts, fb_poster, db_state)
     app.bot_data["scheduler"] = scheduler
     scheduler.start()
 
