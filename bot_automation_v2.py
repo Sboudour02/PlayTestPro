@@ -20,6 +20,9 @@ from functools import wraps
 try:
     from dotenv import load_dotenv
     load_dotenv()
+    # Fallback: load env.prod if core vars still missing (for deployment)
+    if not os.getenv("TELEGRAM_BOT_TOKEN") or not os.getenv("TELEGRAM_CHANNEL_ID"):
+        load_dotenv("env.prod")
 except ImportError:
     pass
 
