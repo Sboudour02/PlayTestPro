@@ -1,0 +1,19 @@
+services:
+  - type: worker
+    name: playtestpro-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot_automation_v2.py
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHANNEL_ID
+        sync: false
+      - key: ADMIN_USER_ID
+        sync: false
+      - key: MIN_DELAY_BETWEEN_POSTS
+        value: "5"
+      - key: MAX_RETRIES
+        value: "3"
+      - key: RETRY_DELAY
+        value: "10"

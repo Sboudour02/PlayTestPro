@@ -1,0 +1,542 @@
+[
+  {
+    "day": 1,
+    "post_number": 1,
+    "hour": 9,
+    "text": "🎓 What is Google Play Closed Testing?\n\nClosed testing lets you share your app with up to 100 trusted testers before launch. You collect real feedback, catch bugs early, and increase your chances of a successful release. Google uses this data to evaluate app quality before featuring it.\n\nStart with 20 testers. Gather feedback. Fix issues. Scale to 100. Then go production.\n\n#AndroidDev #AppTesting",
+    "text_ar": "🎓 ما هو الاختبار المغلق في Google Play؟\n\nالاختبار المغلق يتيح لك مشاركة تطبيقك مع ما يصل إلى 100 مختبر موثوق قبل الإطلاق. تجمع ملاحظات حقيقية، تكتشف الأخطاء مبكراً، وتزيد فرص نجاح إصدارك. تستخدم Google هذه البيانات لتقييم جودة التطبيق.\n\nابدأ بـ 20 مختبراً. اجمع الملاحظات. أصلح المشكلات. توسع إلى 100. ثم انطلق للإنتاج.\n\n#تطوير_أندرويد #اختبار_التطبيقات",
+    "published": true,
+    "post_media": ""
+  },
+  {
+    "day": 1,
+    "post_number": 2,
+    "hour": 15,
+    "text": "💬 Quick poll for developers:\n\nWhat is your biggest challenge when releasing an app?\n\nA) Finding bugs before users do\nB) Getting enough testers\nC) Writing clear bug reports\nD) Managing feedback effectively\n\nDrop your answer in the comments 👇",
+    "text_ar": "💬 استطلاع سريع للمطورين:\n\nما هو أكبر تحدٍ تواجهه عند إطلاق تطبيق؟\n\nأ) اكتشاف الأخطاء قبل المستخدمين\nب) الحصول على عدد كافٍ من المختبرين\nج) كتابة تقارير أخطاء واضحة\nد) إدارة الملاحظات بفعالية\n\nاكتب إجابتك في التعليقات 👇",
+    "published": true,
+    "post_media": ""
+  },
+  {
+    "day": 2,
+    "post_number": 3,
+    "hour": 9,
+    "text": "🛡️ One uncaught NullPointerException can cost you thousands of downloads.\n\nUsers leave 1-star reviews within minutes of a crash. Google Play's algorithm notices. Your visibility drops. And recovering from a bad launch takes weeks.\n\nProfessional testing isn't an expense. It's insurance for your app's reputation.\n\n#QualityMatters",
+    "text_ar": "🛡️ استثناء NullPointerException واحد غير مكتشف قد يكلفك آلاف التنزيلات.\n\nيترك المستخدمون تقييمات بنجمة واحدة خلال دقائق من أي تعطل. خوارزمية Google Play تلاحظ ذلك. تتراجع رؤية تطبيقك. والتعافي من إطلاق سيئ يستغرق أسابيع.\n\nالاختبار الاحترافي ليس تكلفة. إنه تأمين لسمعة تطبيقك.\n\n#الجودة_تهم",
+    "published": false,
+    "post_media": "day2_post3.jpg"
+  },
+  {
+    "day": 2,
+    "post_number": 4,
+    "hour": 15,
+    "text": "🎓 5 Common Android Bugs Found in Production:\n\n1. Memory leaks in background services\n2. Fragment lifecycle mismatches\n3. Network request failures on slow connections\n4. Permission handling on Android 13+\n5. Deep link routing errors\n\nWhich one have you encountered most?",
+    "text_ar": "🎓 5 أخطاء أندرويد شائعة تُكتشف في الإنتاج:\n\n1. تسرب الذاكرة في الخدمات الخلفية\n2. عدم توافق دورة حياة Fragment\n3. فشل طلبات الشبكة في الاتصالات البطيئة\n4. معالجة الأذونات في Android 13+\n5. أخطاء توجيه الروابط العميقة\n\nأي منها واجهتك أكثر من غيره؟",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 3,
+    "post_number": 5,
+    "hour": 9,
+    "text": "🎓 How to Set Up Google Play Closed Testing (Step-by-Step):\n\n1. Go to Play Console → Testing → Closed testing\n2. Create a new track and name it\n3. Upload your AAB/APK\n4. Add tester emails or create a Google Group\n5. Share the opt-in link with your testers\n6. Monitor crashes and feedback in the Console\n\nPro tip: Use a dedicated testing Google Group for easier management.",
+    "text_ar": "🎓 كيفية إعداد الاختبار المغلق في Google Play (خطوة بخطوة):\n\n1. اذهب إلى Play Console → Testing → Closed testing\n2. أنشئ مساراً جديداً وسمِّه\n3. ارفع ملف AAB/APK\n4. أضف رسائل البريد الإلكتروني للمختبرين أو أنشئ مجموعة Google\n5. شارك رابط الاشتراك مع المختبرين\n6. راقب الأعطال والملاحظات\n\nنصيحة: استخدم مجموعة Google مخصصة للاختبار.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 3,
+    "post_number": 6,
+    "hour": 15,
+    "text": "💬 Share your testing stack in the comments 👇\n\nWhat tools do you use for Android testing?\n\n• Espresso / UI Automator\n• Firebase Test Lab\n• Appium\n• Manual QA\n• Something else?\n\nLet's see what the community trusts most.",
+    "text_ar": "💬 شارك أدواتك في الاختبار في التعليقات 👇\n\nما الأدوات التي تستخدمها لاختبار أندرويد؟\n\n• Espresso / UI Automator\n• Firebase Test Lab\n• Appium\n• اختبار يدوي\n• شيء آخر؟\n\nلنرَ ما الذي يثق به المجتمع أكثر.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 4,
+    "post_number": 7,
+    "hour": 9,
+    "text": "🛡️ A 5-star rating doesn't happen by accident.\n\nBehind every top-rated app is a rigorous testing process. Testers explore edge cases, simulate real-world conditions, and catch what automated scripts miss.\n\nThe best developers don't ship faster. They ship smarter.\n\n#PlayTestPro #AppQuality",
+    "text_ar": "🛡️ تقييم 5 نجوم لا يحدث بالصدفة.\n\nوراء كل تطبيق عالي التقييم عملية اختبار دقيقة. يختبر المختبرون الحالات الحدية، يحاكيون الظروف الواقعية، ويكتشفون ما تفوته البرامج الآلية.\n\nأفضل المطورين لا يُصدرون أسرع. يُصدرون أذكى.\n\n#PlayTestPro #جودة_التطبيقات",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 4,
+    "post_number": 8,
+    "hour": 15,
+    "text": "🎓 Test Case vs Test Scenario — What's the Difference?\n\nTest Scenario: What to test (e.g., \"User login flow\")\nTest Case: How to test it step-by-step (e.g., \"Enter valid email → Tap login → Verify dashboard opens\")\n\nStart with scenarios. Break them into cases. Execute with precision.",
+    "text_ar": "🎓 حالة الاختبار مقابل سيناريو الاختبار — ما الفرق؟\n\nسيناريو الاختبار: ماذا تختبر (مثلاً: \"تدفق تسجيل الدخول\")\nحالة الاختبار: كيف تختبره خطوة بخطوة (مثلاً: \"أدخل بريداً ← اضغط تسجيل دخول ← تحقق من فتح لوحة التحكم\")\n\nابدأ بالسيناريوهات. قسمها إلى حالات. نفذ بدقة.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 5,
+    "post_number": 9,
+    "hour": 9,
+    "text": "🎓 Manual vs Automated Testing — When to Use What?\n\nManual Testing:\n✅ UI/UX evaluation\n✅ Exploratory testing\n✅ One-time features\n\nAutomated Testing:\n✅ Regression testing\n✅ Repetitive flows\n✅ CI/CD pipelines\n\nThe winning strategy? Combine both.",
+    "text_ar": "🎓 الاختبار اليدوي مقابل الآلي — متى تستخدم كل منهما؟\n\nيدوي:\n✅ تقييم واجهة المستخدم\n✅ الاختبار الاستكشافي\n✅ الميزات لمرة واحدة\n\nآلي:\n✅ اختبار الانحدار\n✅ التدفقات المتكررة\n✅ أنابيب CI/CD\n\nالاستراتيجية الفائزة؟ ادمج الاثنين.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 5,
+    "post_number": 10,
+    "hour": 15,
+    "text": "📢 Meet PlayTest Pro 🔍\n\nWe specialize in professional testing for Android apps, with deep expertise in Google Play Closed Testing.\n\n✅ Real devices, real testers\n✅ Detailed bug reports with reproduction steps\n✅ Play Console compliance checks\n✅ Quick turnaround for tight deadlines\n\nDevelopers deserve testers who speak their language.\n\nDM us for a free consultation.",
+    "text_ar": "📢 تعرّف على PlayTest Pro 🔍\n\nمتخصصون في الاختبار الاحترافي لتطبيقات أندرويد، بخبرة عميقة في Google Play Closed Testing.\n\n✅ أجهزة حقيقية، مختبرون حقيقيون\n✅ تقارير أخطاء مفصلة\n✅ فحوصات التوافق مع Play Console\n✅ تسليم سريع\n\nراسلنا لاستشارة مجانية.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 6,
+    "post_number": 11,
+    "hour": 9,
+    "text": "🛡️ Behind the Scenes: A Day in Testing 📋\n\nOur testers check:\n• Installation from multiple sources\n• First-time user experience (FTUE)\n• Background/foreground switching\n• Low battery and airplane mode behavior\n• Different screen sizes and orientations\n\nWe test like real users use apps — unpredictably.",
+    "text_ar": "🛡️ كواليس: يوم في حياة الاختبار 📋\n\nمختبرونا يفحصون:\n• التثبيت من مصادر متعددة\n• تجربة المستخدم الأولية\n• التبديل بين الخلفية والأمامية\n• البطارية المنخفضة ووضع الطيران\n• أحجام واتجاهات شاشة مختلفة\n\nنختبر كما يستخدم المستخدمون التطبيقات — بشكل غير متوقع.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 6,
+    "post_number": 12,
+    "hour": 15,
+    "text": "🎓 What is Regression Testing?\n\nWhen you fix one bug, you might introduce another. Regression testing ensures new changes don't break existing features.\n\nBest practice: Run your core user flow tests after every significant update.\n\nAutomation makes this sustainable. Manual testing makes it thorough.",
+    "text_ar": "🎓 ما هو اختبار الانحدار؟\n\nعندما تصلح خطأً، قد تُدخل آخر. اختبار الانحدار يضمن أن التغييرات الجديدة لا تعطل الميزات الحالية.\n\nأفضل ممارسة: شغّل اختبارات التدفق الأساسية بعد كل تحديث مهم.\n\nالأتمتة للاستدامة. اليدوي للشمولية.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 7,
+    "post_number": 13,
+    "hour": 9,
+    "text": "💬 Sunday Challenge 🎯\n\nTest one feature of your app on a device you haven't used before. Different manufacturer, older OS version, or smaller screen.\n\nDid anything break? Share what you found 👇",
+    "text_ar": "💬 تحدي الأحد 🎯\n\nاختبر ميزة من تطبيقك على جهاز لم تستخدمه من قبل. شركة تصنيع مختلفة، إصدار أقدم، أو شاشة أصغر.\n\nهل حدث عطل؟ شاركنا 👇",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 7,
+    "post_number": 14,
+    "hour": 15,
+    "text": "🎓 How to Write Bug Reports Developers Actually Love:\n\n1. Clear, reproducible title\n2. Environment details (device, OS, app version)\n3. Step-by-step reproduction\n4. Expected vs actual result\n5. Screenshots or screen recordings\n6. Severity and priority labels\n\nA good bug report saves hours of back-and-forth.\n\n#DevTips",
+    "text_ar": "🎓 كيف تكتب تقارير أخطاء يحبها المطورون:\n\n1. عنوان واضح قابل لإعادة الإنتاج\n2. تفاصيل البيئة (الجهاز، النظام، الإصدار)\n3. خطوات إعادة الإنتاج بالتسلسل\n4. النتيجة المتوقعة مقابل الفعلية\n5. لقطات أو تسجيلات شاشة\n6. تصنيف الخطورة والأولوية\n\nتقرير جيد يوفر ساعات من المراسلة.\n\n#نصائح_للمطورين",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 8,
+    "post_number": 15,
+    "hour": 9,
+    "text": "🎓 UI/UX Testing Checklist for Android Apps:\n\n□ Consistent Material Design components\n□ Touch targets at least 48dp\n□ Dark mode compatibility\n□ Font scaling up to 200%\n□ Landscape and portrait layouts\n□ Gesture navigation support\n\nUsers notice polish more than features.",
+    "text_ar": "🎓 قائمة فحص واجهة المستخدم لأندرويد:\n\n□ مكونات Material Design متسقة\n□ أهداف اللمس ≥ 48dp\n□ التوافق مع الوضع الداكن\n□ تحجيم الخط حتى 200%\n□ تخطيطات أفقي وعمودي\n□ دعم التنقل بالإيماءات\n\nالمستخدمون يلاحظون الإتقان أكثر من الميزات.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 8,
+    "post_number": 16,
+    "hour": 15,
+    "text": "💬 Q&A Session Announcement! 🎙️\n\nThis Friday, we're answering your testing questions. Drop them below and we'll cover the best ones.\n\nTopics: Google Play testing, bug reporting, test automation, release strategy — anything related to shipping quality Android apps.\n\n#AskPlayTestPro",
+    "text_ar": "💬 إعلان جلسة أسئلة وأجوبة! 🎙️\n\nهذا الجمعة، نجيب على أسئلتكم عن الاختبار. اطرحوها أدناه.\n\nالمواضيع: اختبار Google Play، الإبلاغ عن الأخطاء، الأتمتة، استراتيجية الإطلاق.\n\n#اسأل_PlayTestPro",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 9,
+    "post_number": 17,
+    "hour": 9,
+    "text": "🛡️ Before & After Testing 📊\n\nBefore: Developer tests on personal device, assumes it works everywhere. App launches. 1-star reviews pour in. Rating drops.\n\nAfter: Professional testing across devices. Bugs caught early. Clean launch. Positive reviews. Algorithm boost.\n\nThe difference? Investment in quality before shipping.",
+    "text_ar": "🛡️ قبل وبعد الاختبار 📊\n\nقبل: يختبر المطور على جهازه. يُطلق. تقييمات سيئة. ينخفض التقييم.\n\nبعد: اختبار احترافي عبر أجهزة. أخطاء مكتشفة مبكراً. إطلاق نظيف. تقييمات إيجابية.\n\nالفرق؟ الاستثمار في الجودة قبل الإصدار.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 9,
+    "post_number": 18,
+    "hour": 15,
+    "text": "🎓 Performance Testing Basics:\n\n• Cold start time (target: < 2 seconds)\n• Memory usage during heavy operations\n• Battery drain during background tasks\n• Frame rate stability (60fps target)\n• Network usage efficiency\n\nTest under real conditions, not just emulators.",
+    "text_ar": "🎓 أساسيات اختبار الأداء:\n\n• زمن بدء التشغيل البارد (< 2 ثانية)\n• استخدام الذاكرة أثناء العمليات الثقيلة\n• استنزاف البطارية في الخلفية\n• استقرار معدل الإطارات (60fps)\n• كفاءة استخدام الشبكة\n\nاختبر بظروف حقيقية، ليس فقط بالمحاكيات.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 10,
+    "post_number": 19,
+    "hour": 9,
+    "text": "🎓 Security Testing for Android Apps:\n\n□ SSL pinning implementation\n□ Root detection and response\n□ Sensitive data in logs\n□ Local storage encryption\n□ OAuth token handling\n□ Code obfuscation (R8/ProGuard)\n\nSecurity isn't a feature. It's a foundation.",
+    "text_ar": "🎓 اختبار الأمان لأندرويد:\n\n□ تطبيق SSL pinning\n□ كشف الأجهزة المخترقة\n□ البيانات الحساسة في السجلات\n□ تشفير التخزين المحلي\n□ معالجة رموز OAuth\n□ تشويش الكود (R8/ProGuard)\n\nالأمان ليس ميزة. إنه أساس.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 10,
+    "post_number": 20,
+    "hour": 15,
+    "text": "💬 Myth vs Reality — Testing Edition 🎭\n\nMyth: \"My app is small, I don't need testing.\"\nReality: Small apps get reviewed too. One crash = bad first impression.\n\nMyth: \"Emulators are enough.\"\nReality: Real devices behave differently. Always test on hardware.\n\nMyth: \"Users will report bugs.\"\nReality: Most users just uninstall. You won't even know why.\n\nWhich myth have you heard most?",
+    "text_ar": "💬 خرافة مقابل حقيقة — الاختبار 🎭\n\nخرافة: \"تطبيقي صغير، لا أحتاج اختباراً.\"\nحقيقة: الصغيرة تُراجع أيضاً. تعطل واحد = انطباع أول سيء.\n\nخرافة: \"المحاكيات كافية.\"\nحقيقة: الأجهزة الحقيقية تتصرف بشكل مختلف.\n\nخرافة: \"المستخدمون سيبلغون عن الأخطاء.\"\nحقيقة: معظمهم يلغون التثبيت.\n\nأي خرافة سمعتها أكثر؟",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 11,
+    "post_number": 21,
+    "hour": 9,
+    "text": "🛡️ Test Coverage — What Do the Numbers Mean?\n\nCode coverage tells you how much code your tests touch. But 100% coverage doesn't mean zero bugs.\n\nWhat matters more:\n• Covering critical user paths\n• Testing boundary conditions\n• Validating real-world scenarios\n\nQuality over quantity, always.",
+    "text_ar": "🛡️ تغطية الاختبار — ماذا تعني الأرقام؟\n\nتغطية الكود تخبرك كم يلمسه اختبارك. لكن 100% لا تعني صفر أخطاء.\n\nما يهم أكثر:\n• تغطية مسارات المستخدم الحرجة\n• اختبار الظروف الحدية\n• التحقق من سيناريوهات واقعية\n\nالجودة قبل الكمية، دائماً.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 11,
+    "post_number": 22,
+    "hour": 15,
+    "text": "🎓 Integration Testing Explained:\n\nYour app doesn't work in isolation. It talks to APIs, databases, and third-party services.\n\nIntegration testing verifies these connections work together correctly.\n\nKey areas:\n• API response handling\n• Database read/write operations\n• Payment gateway flows\n• Push notification delivery",
+    "text_ar": "🎓 شرح اختبار التكامل:\n\nتطبيقك لا يعمل بمعزل عن الآخرين. يتواصل مع APIs، قواعد بيانات، وخدمات خارجية.\n\nاختبار التكامل يتحقق من أن هذه الاتصالات تعمل معاً.\n\nالمجالات الرئيسية:\n• معالجة استجابات API\n• قراءة وكتابة قاعدة البيانات\n• تدفقات بوابة الدفع\n• توصيل الإشعارات",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 12,
+    "post_number": 23,
+    "hour": 9,
+    "text": "📢 Free Download: Android Pre-Launch Testing Checklist ✅\n\nGet our comprehensive checklist covering:\n• Functional testing\n• UI/UX validation\n• Performance benchmarks\n• Play Store compliance\n• Security essentials\n\nLink in bio / DM \"CHECKLIST\" to receive it instantly.",
+    "text_ar": "📢 تحميل مجاني: قائمة فحص ما قبل إطلاق أندرويد ✅\n\nقائمة شاملة تغطي:\n• الاختبار الوظيفي\n• التحقق من واجهة المستخدم\n• معايير الأداء\n• التوافق مع Play Store\n• أساسيات الأمان\n\nراسلنا بكلمة CHECKLIST لتحصل عليها فوراً.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 12,
+    "post_number": 24,
+    "hour": 15,
+    "text": "🛡️ Why Development Teams Choose PlayTest Pro:\n\n🎯 We understand Google Play's review process firsthand\n📱 We test on real devices, not just emulators\n📝 We deliver reports developers can act on immediately\n⏱️ We respect your release deadlines\n\nWe're not just testers. We're an extension of your QA team.",
+    "text_ar": "🛡️ لماذا تختار فرق التطوير PlayTest Pro:\n\n🎯 نفهم مراجعة Google Play عن قرب\n📱 نختبر على أجهزة حقيقية\n📝 تقارير قابلة للتنفيذ فوراً\n⏱️ نحترم مواعيد الإصدار\n\nلسنا مجرد مختبرين. نحن امتداد لفريق ضمان الجودة.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 13,
+    "post_number": 25,
+    "hour": 9,
+    "text": "💬 Guess the Bug! 🐛\n\nScenario: Your app works perfectly on your test device. But users on Android 12 report crashes on launch.\n\nWhat's the most likely cause?\n\nA) Missing exported=\"true\" on activity\nB) Incorrect minSdkVersion\nC) Missing adaptive icon\nD) Firebase dependency conflict\n\nAnswer revealed in 24 hours 👇",
+    "text_ar": "💬 خمّن الخطأ! 🐛\n\nالسيناريو: تطبيقك يعمل على جهاز الاختبار. لكن مستخدمي Android 12 يبلغون عن أعطال عند التشغيل.\n\nالسبب الأكثر احتمالاً؟\n\nأ) exported=\"true\" مفقودة\nب) minSdkVersion خاطئ\nج) الأيقونة المتكيفة مفقودة\nد) تعارض Firebase\n\nالإجابة بعد 24 ساعة 👇",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 13,
+    "post_number": 26,
+    "hour": 15,
+    "text": "👥 Community Spotlight 💡\n\nEvery app started as an idea. Every successful launch started with testing.\n\nTag a developer friend who's shipping an app soon. They need to see this channel.\n\nSharing knowledge helps the whole Android community grow 🚀",
+    "text_ar": "👥 تسليط الضوء على المجتمع 💡\n\nكل تطبيق بدأ كفكرة. كل إطلاق ناجح بدأ باختبار.\n\nأشرِك صديقاً مطوراً سيُصدر قريباً.\n\nمشاركة المعرفة تنمي مجتمع أندرويد 🚀",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 14,
+    "post_number": 27,
+    "hour": 9,
+    "text": "🎓 Firebase Test Lab: What You Need to Know\n\nGoogle's cloud testing service runs your app on real devices across brands, OS versions, and screen sizes.\n\nBest for:\n• Compatibility testing\n• Stress testing with many devices\n• Quick smoke tests before release\n\nCombine with manual testing for best results.",
+    "text_ar": "🎓 Firebase Test Lab: ما تحتاج معرفته\n\nخدمة الاختبار السحابية من Google تشغل تطبيقك على أجهزة حقيقية.\n\nالأفضل لـ:\n• اختبار التوافق\n• اختبار الإجهاد\n• اختبارات سريعة قبل الإصدار\n\nادمجه مع الاختبار اليدوي لأفضل النتائج.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 14,
+    "post_number": 28,
+    "hour": 15,
+    "text": "🎓 Top Android Test Automation Frameworks (2025):\n\n1. Espresso — Fast, reliable UI testing\n2. UI Automator — Cross-app testing\n3. Appium — Cross-platform flexibility\n4. Shot — Screenshot testing\n5. Maestro — Modern, simple syntax\n\nChoose based on your stack and team expertise.",
+    "text_ar": "🎓 أفضل أطر أتمتة اختبار أندرويد (2025):\n\n1. Espresso — سريع وموثوق\n2. UI Automator — عبر التطبيقات\n3. Appium — مرونة عبر المنصات\n4. Shot — اختبار لقطات الشاشة\n5. Maestro — بناء جملة حديث\n\nاختر بناءً على تقنيتك وخبرة فريقك.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 15,
+    "post_number": 29,
+    "hour": 9,
+    "text": "🛡️ Case Study: The App That Launched Clean 🏆\n\nA client came to us with 3 days until launch. One critical bug remained unreproducible on their end.\n\nWe identified a race condition on Samsung devices running Android 13. Fixed. Verified on 12 real devices. Launched with zero crash reports in the first week.\n\nTiming matters. Testing matters more.",
+    "text_ar": "🛡️ دراسة حالة: تطبيق أُطلق نظيفاً 🏆\n\nعميل بقي 3 أيام على الإطلاق. خطأ حرج غير قابل لإعادة الإنتاج.\n\nحددنا مشكلة تنافس على Samsung Android 13. أصلحناها. تحققنا على 12 جهازاً. أُطلق بصفر أعطال في الأسبوع الأول.\n\nالتوقيت مهم. الاختبار أهم.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 15,
+    "post_number": 30,
+    "hour": 15,
+    "text": "🎓 Compatibility Testing: The Full Picture\n\nYour app needs to work on:\n• Different manufacturers (Samsung, Xiaomi, Pixel, OnePlus)\n• Various Android versions (10 through 15)\n• Multiple screen sizes and densities\n• Different network conditions (3G, 4G, WiFi, offline)\n\nOne device is a sample. Ten devices is data.",
+    "text_ar": "🎓 اختبار التوافق: الصورة الكاملة\n\nتطبيقك يجب أن يعمل على:\n• شركات تصنيع مختلفة (Samsung, Xiaomi, Pixel, OnePlus)\n• إصدارات أندرويد (10 إلى 15)\n• أحجام شاشة متعددة\n• ظروف شبكة مختلفة (3G, 4G, WiFi, بدون اتصال)\n\nجهاز واحد = عينة. عشرة أجهزة = بيانات.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 16,
+    "post_number": 31,
+    "hour": 9,
+    "text": "🎓 Accessibility Testing Checklist:\n\n□ Screen reader compatibility (TalkBack)\n□ Content descriptions for images\n□ Sufficient color contrast (4.5:1 minimum)\n□ Focus navigation via keyboard/D-pad\n□ Dynamic text sizing support\n\nAccessibility improves UX for everyone, not just users with disabilities.",
+    "text_ar": "🎓 قائمة فحص إمكانية الوصول:\n\n□ التوافق مع TalkBack\n□ أوصاف المحتوى للصور\n□ تباين ألوان ≥ 4.5:1\n□ التنقل بلوحة المفاتيح\n□ تحجيم النص الديناميكي\n\nإمكانية الوصول تحسّن التجربة للجميع.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 16,
+    "post_number": 32,
+    "hour": 15,
+    "text": "🎓 Closed Testing vs Beta Testing — What's Different?\n\nClosed Testing:\n• Invitation-only, up to 100 testers\n• No public listing\n• Ideal for early-stage validation\n• Required before production release\n\nBeta Testing (Open Testing):\n• Public opt-in, unlimited testers\n• Listed on Play Store\n• Broader feedback before full launch\n\nBoth have their place in a solid release strategy.",
+    "text_ar": "🎓 الاختبار المغلق vs اختبار بيتا — ما الفرق؟\n\nمغلق:\n• بدعوة فقط، حتى 100 مختبر\n• لا إدراج عام\n• مثالي للتحقق المبكر\n• مطلوب قبل الإنتاج\n\nبيتا:\n• اشتراك عام، غير محدود\n• مُدرج في Play Store\n• ملاحظات أوسع\n\nلكلٍ دور في استراتيجية إطلاق متكاملة.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 17,
+    "post_number": 33,
+    "hour": 9,
+    "text": "🛡️ The ROI of Professional Testing\n\nInvesting in testing before launch prevents:\n• Bad reviews that live forever\n• Revenue loss from uninstalls\n• Expensive emergency patches\n• Reputational damage to your brand\n\nProfessional testing typically costs less than recovering from a failed launch.\n\nPrevention > Cure",
+    "text_ar": "🛡️ العائد على الاستثمار في الاختبار:\n\nالاستثمار قبل الإطلاق يمنع:\n• تقييمات سيئة للأبد\n• خسارة إيرادات من الإلغاء\n• تصحيحات طارئة مكلفة\n• ضرر السمعة\n\nالاختبار الاحترافي أقل تكلفة من التعافي من فشل.\n\nالوقاية خير من العلاج",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 17,
+    "post_number": 34,
+    "hour": 15,
+    "text": "🎓 API Testing Essentials for Mobile Developers:\n\n• Verify status codes and response times\n• Test with invalid tokens and expired sessions\n• Simulate slow and interrupted connections\n• Validate data structure consistency\n• Check error message clarity\n\nYour app is only as reliable as the APIs it depends on.",
+    "text_ar": "🎓 أساسيات اختبار API للمطورين:\n\n• تحقق من رموز الحالة وأوقات الاستجابة\n• اختبر برموز غير صالحة\n• حاكِ الاتصالات البطيئة\n• تحقق من اتساق بنية البيانات\n• راجع وضوح رسائل الخطأ\n\nتطبيقك بموثوقية APIs التي يعتمد عليها.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 18,
+    "post_number": 35,
+    "hour": 9,
+    "text": "📢 🎁 Free 30-Minute Testing Consultation\n\nLaunching soon? Stuck with a bug? Not sure about your testing strategy?\n\nBook a free call with our testing team. No commitment, no sales pitch.\n\nJust actionable advice from people who test Android apps every day.\n\nDM \"CONSULT\" to schedule.",
+    "text_ar": "📢 🎁 استشارة اختبار مجانية (30 دقيقة)\n\nهل ستُطلق قريباً؟ توقفت عند خطأ؟ لست متأكداً من استراتيجيتك؟\n\nاحجز مكالمة مجانية. بدون التزام.\n\nراسلنا بكلمة CONSULT للحجز.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 18,
+    "post_number": 36,
+    "hour": 15,
+    "text": "📢 Why PlayTest Pro?\n\nWe don't just find bugs. We help you ship with confidence.\n\n• Deep Google Play testing expertise\n• Fast turnaround without compromising quality\n• Reports that developers actually use\n• Competitive pricing for independent devs and teams\n\nYour app deserves professional eyes on it before it meets the world.",
+    "text_ar": "📢 لماذا PlayTest Pro؟\n\nنحن لا نكتشف الأخطاء فقط. نساعدك على الإصدار بثقة.\n\n• خبرة عميقة في اختبار Google Play\n• تسليم سريع دون المساس بالجودة\n• تقارير يستخدمها المطورون\n• أسعار تنافسية\n\nتطبيقك يستحق عناية احترافية.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 19,
+    "post_number": 37,
+    "hour": 9,
+    "text": "💬 Testing Quiz 🧠\n\nTrue or False?\n\n1. Closed testing is mandatory before Play Store production release.\n2. You need at least 50 testers for closed testing.\n3. Closed testing feedback affects your Play Store rating.\n\nAnswers posted tomorrow!",
+    "text_ar": "💬 اختبار معلومات 🧠\n\nصح أم خطأ؟\n\n1. الاختبار المغلق إجباري قبل إصدار الإنتاج.\n2. تحتاج 50 مختبراً على الأقل.\n3. ملاحظات الاختبار المغلق تؤثر على تقييمك.\n\nالإجابات غداً!",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 19,
+    "post_number": 38,
+    "hour": 15,
+    "text": "🎓 Developer Tip of the Day:\n\nAlways test your release build, not just debug.\n\nRelease builds have:\n• Code obfuscation enabled\n• Different signing certificates\n• Optimized resource handling\n• ProGuard/R8 transformations\n\nBugs that don't exist in debug can appear only in release.\n\nBuild variants matter. Test the right one.",
+    "text_ar": "🎓 نصيحة اليوم:\n\nاختبر إصدار الإطلاق (release)، وليس التصحيح (debug) فقط.\n\nإصدار الإطلاق يحتوي على:\n• تشويش الكود مُفعّل\n• شهادات توقيع مختلفة\n• تحسين الموارد\n• تحويلات ProGuard/R8\n\nأخطاء غير موجودة في التصحيح قد تظهر فقط في الإطلاق.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 20,
+    "post_number": 39,
+    "hour": 9,
+    "text": "🎓 Stress Testing: Push Your App to the Limit\n\n• Launch multiple instances rapidly\n• Fill device storage and test behavior\n• Switch networks mid-transaction\n• Handle rapid user input sequences\n• Process thousands of notification triggers\n\nIf your app survives stress, users will trust it.",
+    "text_ar": "🎓 اختبار الإجهاد: ادفع تطبيقك للحد الأقصى\n\n• شغّل نسخاً متعددة بسرعة\n• املأ التخزين واختبر السلوك\n• بدّل الشبكات أثناء المعاملة\n• تعامل مع إدخال سريع\n• عالج آلاف الإشعارات\n\nإذا نجا من الإجهاد، سيثق به المستخدمون.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 20,
+    "post_number": 40,
+    "hour": 15,
+    "text": "🎓 Google Play Policy Compliance Checklist:\n\n□ No deceptive behavior or hidden functionality\n□ Proper data handling disclosures\n□ Accurate app descriptions and screenshots\n□ In-app purchase compliance\n□ Target API level requirements met\n\nPolicy rejections waste time. Review this list before every submission.",
+    "text_ar": "🎓 قائمة فحص الامتثال لسياسات Google Play:\n\n□ لا سلوك خادع\n□ إفصاح عن معالجة البيانات\n□ أوصاف دقيقة\n□ الامتثال للمشتريات الداخلية\n□ متطلبات API المستهدف\n\nالرفض يضيع الوقت. راجع القائمة قبل كل تقديم.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 21,
+    "post_number": 41,
+    "hour": 9,
+    "text": "🛡️ Our Testing Checklist Walkthrough (Sneak Peek)\n\nEvery app we test goes through 200+ checkpoints across:\n• Installation & onboarding\n• Core features & edge cases\n• Performance under pressure\n• Platform-specific behaviors\n• Play Store readiness\n\nThoroughness isn't optional when your reputation is on the line.",
+    "text_ar": "🛡️ جولة في قائمة الفحص (لمحة سريعة)\n\nكل تطبيق نختبره يمر بأكثر من 200 نقطة فحص:\n• التثبيت والتوجيه\n• الميزات الأساسية والحالات الحدية\n• الأداء تحت الضغط\n• سلوكيات خاصة بالمنصة\n• الاستعداد لـ Play Store\n\nالدقة ليست خياراً عندما تكون سمعتك على المحك.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 21,
+    "post_number": 42,
+    "hour": 15,
+    "text": "🛡️ Real Feedback Examples We Deliver:\n\n❌ \"It doesn't work\" \n✅ \"Login fails on Android 14 with specific locales. Steps to reproduce...\"\n\n❌ \"App is slow\"\n✅ \"Settings screen takes 4.2s to load on mid-range devices. Screenshot and logcat attached.\"\n\nClear feedback leads to faster fixes.",
+    "text_ar": "🛡️ أمثلة حقيقية لملاحظاتنا:\n\n❌ \"لا يعمل\"\n✅ \"فشل تسجيل الدخول على Android 14 مع لغات محددة. خطوات إعادة الإنتاج...\"\n\n❌ \"التطبيق بطيء\"\n✅ \"شاشة الإعدادات تستغرق 4.2 ثانية على الأجهزة المتوسطة. لقطة شاشة مرفقة.\"\n\nملاحظات واضحة = إصلاحات أسرع.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 22,
+    "post_number": 43,
+    "hour": 9,
+    "text": "🎓 Database Testing for Android:\n\n□ CRUD operations work correctly\n□ Migration scripts test successfully\n□ Concurrent access handled properly\n□ Data persists after app restart\n□ Corrupted state recovery works\n\nYour local database is where user trust lives. Test it carefully.",
+    "text_ar": "🎓 اختبار قاعدة البيانات لأندرويد:\n\n□ CRUD يعمل بشكل صحيح\n□ نصوص الترحيل تنجح\n□ الوصول المتزامن يُدار بشكل صحيح\n□ البيانات تبقى بعد إعادة التشغيل\n□ استعادة الحالة التالفة تعمل\n\nقاعدة البيانات هي مكان ثقة المستخدم. اختبرها بعناية.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 22,
+    "post_number": 44,
+    "hour": 15,
+    "text": "🎓 Network Condition Testing:\n\nDon't assume perfect WiFi. Test on:\n• 2G/3G/4G/5G\n• Airplane mode transitions\n• Intermittent connection drops\n• High latency (300ms+)\n• DNS failures\n\nNetwork-aware apps keep users engaged even offline.",
+    "text_ar": "🎓 اختبار ظروف الشبكة:\n\nلا تفترض WiFi مثالياً. اختبر:\n• 2G/3G/4G/5G\n• التبديل من وإلى وضع الطيران\n• انقطاع متقطع\n• زمن استجابة عال (300ms+)\n• فشل DNS\n\nالتطبيقات الواعية بالشبكة تبقي المستخدمين متفاعلين.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 23,
+    "post_number": 45,
+    "hour": 9,
+    "text": "🛡️ The Hidden Cost of Skipping Testing\n\nDirect costs:\n• Emergency patches\n• Customer support burden\n• Lost user acquisition spend\n\nIndirect costs:\n• Lower lifetime value per user\n• Slower iteration cycles\n• Team burnout from firefighting\n\nTesting isn't an expense. It's risk management.",
+    "text_ar": "🛡️ التكلفة الخفية لتخطي الاختبار\n\nمباشرة:\n• تصحيحات طارئة\n• عبء دعم العملاء\n• إنفاق ضائع على اكتساب المستخدمين\n\nغير مباشرة:\n• انخفاض القيمة الدائمة للمستخدم\n• دورات تطوير أبطأ\n• إرهاق الفريق\n\nالاختبار ليس مصروفاً. إنه إدارة مخاطر.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 23,
+    "post_number": 46,
+    "hour": 15,
+    "text": "🎓 Continuous Testing in CI/CD:\n\n1. Developer pushes code\n2. Automated tests run\n3. Reports generated instantly\n4. Issues caught before merge\n5. Clean builds deploy automatically\n\nAutomation + Human testing = Unbeatable quality assurance",
+    "text_ar": "🎓 الاختبار المستمر في CI/CD:\n\n1. يدفع المطور الكود\n2. تُشغّل الاختبارات الآلية\n3. تُنشأ التقارير فوراً\n4. تُكتشف المشكلات قبل الدمج\n5. تُنشر البناءات النظيفة تلقائياً\n\nالأتمتة + الاختبار البشري = ضمان جودة لا يُقهر",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 24,
+    "post_number": 47,
+    "hour": 9,
+    "text": "📢 💬 Client Spotlight\n\n\"PlayTest Pro caught 12 issues in two days that our internal team missed in two weeks. Worth every penny.\"\n\n— Independent Android Developer, Health & Fitness App (50K+ downloads)\n\nResults matter. Your app matters. Let's talk.\n\nDM us for details.",
+    "text_ar": "📢 تسليط الضوء على العميل\n\n\"PlayTest Pro اكتشفت 12 مشكلة في يومين فاتت على فريقنا في أسبوعين. تستحق كل قرش.\"\n\n— مطور مستقل، تطبيق صحة (50K+ تحميل)\n\nالنتائج مهمة. تطبيقك مهم.\n\nراسلنا للتفاصيل.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 24,
+    "post_number": 48,
+    "hour": 15,
+    "text": "📢 PlayTest Pro Service Packages:\n\n🟢 Starter — Quick smoke test before launch (2-3 days)\n🟡 Professional — Full functional + compatibility testing (5-7 days)\n🔴 Enterprise — End-to-end testing + Play Store compliance (7-10 days)\n\nEvery package includes real devices, detailed reports, and direct communication with testers.\n\nNeed something custom? Let's build it.",
+    "text_ar": "📢 باقات خدمات PlayTest Pro:\n\n🟢 Starter — اختبار سريع (2-3 أيام)\n🟡 Professional — اختبار وظيفي كامل + توافق (5-7 أيام)\n🔴 Enterprise — اختبار شامل + الامتثال (7-10 أيام)\n\nالكل يشمل أجهزة حقيقية وتقارير مفصلة.\n\nهل تحتاج شيئاً مخصصاً؟ فلنبنيها معاً.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 25,
+    "post_number": 49,
+    "hour": 9,
+    "text": "💬 Share Your Setup! 🛠️\n\nIDE: Android Studio / IntelliJ / Other\nTesting: Espresso / Appium / Manual\nCI/CD: GitHub Actions / Bitrise / Jenkins / None\nDevices: Emulators only / 1-2 real devices / Test lab\n\nWhat's your current testing workflow? Let's learn from each other 👇",
+    "text_ar": "💬 شارك إعداداتك! 🛠️\n\nIDE: Android Studio / IntelliJ / غير ذلك\nالاختبار: Espresso / Appium / يدوي\nCI/CD: GitHub Actions / Bitrise / Jenkins / لا يوجد\nالأجهزة: محاكيات / 1-2 حقيقي / مختبر\n\nما سير عمل الاختبار لديك؟ دعنا نتعلم 👇",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 25,
+    "post_number": 50,
+    "hour": 15,
+    "text": "💬 Weekly Recap 📰\n\nThis week we covered:\n✅ Database & network testing tips\n✅ CI/CD integration for testing\n✅ Real client results\n✅ Our service packages\n\nWhat topic should we dive deeper into next week? Suggest below! 👇",
+    "text_ar": "💬 ملخص الأسبوع 📰\n\nهذا الأسبوع:\n✅ نصائح اختبار قاعدة البيانات والشبكة\n✅ دمج CI/CD\n✅ نتائج عملاء حقيقية\n✅ باقات خدماتنا\n\nما الموضوع القادم؟ اقترح 👇",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 26,
+    "post_number": 51,
+    "hour": 9,
+    "text": "🎓 Localization Testing: Beyond Translation\n\n□ Text doesn't overflow in German (30% longer)\n□ RTL layouts work for Arabic/Hebrew\n□ Dates, currencies, and numbers formatted correctly\n• Emoji rendering across devices\n□ Search handles accented characters\n\nA localized app feels native. A translated app feels foreign.",
+    "text_ar": "🎓 اختبار التوطين: أبعد من الترجمة\n\n□ النص لا يفيض بالألمانية (أطول 30%)\n□ التخطيطات RTL للعربية والعبرية\n□ التواريخ والعملات منسقة\n□ عرض الرموز التعبيرية\n□ البحث يتعامل مع الأحرف المشكّلة\n\nالتطبيق المترجم محلياً يبدو أصلياً.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 26,
+    "post_number": 52,
+    "hour": 15,
+    "text": "🎓 Deep Link Testing Checklist:\n\n□ Links open correct screens from external apps\n□ Invalid deep links handled gracefully\n□ Deferred deep links work after install\n□ App indexing verification passed\n□ Multiple entry points tested consistently\n\nBroken deep links = lost users and revenue.",
+    "text_ar": "🎓 قائمة فحص الروابط العميقة:\n\n□ تفتح الشاشات الصحيحة\n□ الروابط غير الصالحة تُعالج بلطف\n□ الروابط المؤجلة تعمل بعد التثبيت\n□ فهرسة التطبيق تمت\n□ نقاط دخول متعددة اختُبرت\n\nروابط معطلة = مستخدمون وإيرادات مفقودة.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 27,
+    "post_number": 53,
+    "hour": 9,
+    "text": "🛡️ Testing by the Numbers 📊\n\nApps with professional testing before launch see:\n• 45% fewer crash reports in the first month\n• 30% better user retention in week one\n• 60% faster resolution of critical bugs\n• 3x fewer negative Play Store reviews\n\nQuality is quantifiable. Good testing is measurable.",
+    "text_ar": "🛡️ الاختبار بالأرقام 📊\n\nالتطبيقات المختبرة احترافياً قبل الإطلاق:\n• 45% أقل أعطال في الشهر الأول\n• 30% تحسن في الاحتفاظ بالمستخدمين\n• 60% أسرع في حل الأخطاء الحرجة\n• 3x أقل تقييمات سلبية\n\nالجودة قابلة للقياس. الاختبار الجيد قابل للحساب.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 27,
+    "post_number": 54,
+    "hour": 15,
+    "text": "🛡️ How Testing Prevents Play Store Rejection\n\nCommon rejection reasons we catch during testing:\n• Crashes on launch\n• Misleading screenshots\n• Missing privacy policy links\n• Broken functionality in core paths\n• Policy-violating content\n\nEvery rejection delays your launch. Testing prevents that.",
+    "text_ar": "🛡️ كيف يمنع الاختبار رفض Play Store\n\nأسباب الرفض الشائعة التي نكتشفها:\n• أعطال عند التشغيل\n• لقطات شاشة مضللة\n• روابط سياسة الخصوصية مفقودة\n• وظائف معطلة\n• محتوى مخالف\n\nكل رفض يؤخر إطلاقك. الاختبار يمنعه.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 28,
+    "post_number": 55,
+    "hour": 9,
+    "text": "🎓 Battery Drain Testing:\n\n□ Measure baseline consumption\n□ Monitor during background sync\n□ Test location services usage\n□ Check wake locks and alarms\n□ Profile with Battery Historian\n\nUsers uninstall battery-hungry apps. Test before they notice.",
+    "text_ar": "🎓 اختبار استنزاف البطارية:\n\n□ قياس الاستهلاك الأساسي\n□ المراقبة أثناء المزامنة الخلفية\n□ اختبار خدمات الموقع\n□ فتح أقفال الاستيقاظ\n□ تحليل الأداء\n\nالمستخدمون يلغون تثبيت التطبيقات التي تستهلك البطارية.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 28,
+    "post_number": 56,
+    "hour": 15,
+    "text": "🎓 Push Notification Testing:\n\n□ Delivered on time across channels\n□ Deep link from notification works\n□ Grouped properly in notification shade\n□ Dismiss and reply actions functional\n□ Throttling handled gracefully\n\nNotifications are a critical UX touchpoint. Don't neglect them.",
+    "text_ar": "🎓 اختبار الإشعارات الفورية:\n\n□ تُسلم في الوقت المحدد\n□ الرابط العميق يعمل\n□ مجمعة بشكل صحيح\n□ الرفض والرد يعملان\n□ الحد من التكرار يُعالج\n\nالإشعارات نقطة تواصل حاسمة. لا تهملها.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 29,
+    "post_number": 57,
+    "hour": 9,
+    "text": "🛡️ Before You Launch Checklist:\n\n□ Closed testing completed with feedback addressed\n□ Crash-free sessions on target devices\n□ Release build tested, not debug\n□ Play Store assets finalized\n□ Privacy policy and terms updated\n□ Rating questionnaire prepared\n□ Rollout strategy planned (staged vs full)\n\nLaunch day should be exciting, not stressful.",
+    "text_ar": "🛡️ قائمة فحص ما قبل الإطلاق:\n\n□ الاختبار المغلق مكتمل\n□ جلسات خالية من الأعطال\n□ إصدار الإطلاق مختبر\n□ أصول Play Store منتهية\n□ سياسة الخصوصية محدثة\n□ استبيان التقييم جاهز\n□ استراتيجية الطرح مخططة\n\nيوم الإطلاق يجب أن يكون مثيراً، لا مرهقاً.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 29,
+    "post_number": 58,
+    "hour": 15,
+    "text": "🎓 Testing Maturity Model:\n\nLevel 1: No testing, rely on users\nLevel 2: Manual testing on personal device\nLevel 3: Multiple devices, structured testing\nLevel 4: Automated + manual testing integrated\nLevel 5: Full CI/CD with automated quality gates\n\nWhat level is your team at? What would it take to reach the next level?",
+    "text_ar": "🎓 نموذج نضج الاختبار:\n\nالمستوى 1: لا اختبار، اعتماد على المستخدمين\nالمستوى 2: يدوي على جهاز شخصي\nالمستوى 3: أجهزة متعددة، اختبار منظم\nالمستوى 4: آلي + يدوي متكامل\nالمستوى 5: CI/CD ببوابات جودة آلية\n\nفي أي مستوى فريقك؟",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 30,
+    "post_number": 59,
+    "hour": 9,
+    "text": "💬 30 Days of Testing Knowledge — Recap 🎓\n\nOver the past month we shared:\n• 15+ educational posts on testing practices\n• Real-world case studies and data\n• Community challenges and quizzes\n• Free resources and checklists\n• Actionable tips for every Android developer\n\nThank you for being part of this community. Let's keep building quality together.",
+    "text_ar": "💬 30 يوماً من معرفة الاختبار — خلاصة 🎓\n\nفي الشهر الماضي شاركنا:\n• 15+ منشوراً تعليمياً\n• دراسات حالة وبيانات واقعية\n• تحديات ومسابقات\n• موارد وقوائم فحص مجانية\n• نصائح لكل مطور أندرويد\n\nشكراً لكونك جزءاً من هذا المجتمع. لنستمر في بناء الجودة معاً.",
+    "published": false,
+    "post_media": ""
+  },
+  {
+    "day": 30,
+    "post_number": 60,
+    "hour": 15,
+    "text": "🚀 Ready to Ship with Confidence?\n\nYou've consumed 30 days of testing wisdom. Now it's time to put it to work.\n\nPlayTest Pro helps Android developers launch clean, tested apps through Google Play's closed testing and beyond.\n\n✅ Free consultation\n✅ Real device testing\n✅ Developer-friendly reports\n\nDM us or click the link in bio to get started.\n\nYour users deserve a flawless first impression 🎯\n\n#PlayTestPro #AndroidDev #QualityFirst",
+    "text_ar": "🚀 هل أنت مستعد للإصدار بثقة؟\n\nاستهلكت 30 يوماً من حكمة الاختبار. حان وقت التطبيق.\n\nPlayTest Pro تساعد مطوري أندرويد على إطلاق تطبيقات نظيفة ومختبرة.\n\n✅ استشارة مجانية\n✅ اختبار على أجهزة حقيقية\n✅ تقارير صديقة للمطورين\n\nراسلنا للبدء.\n\nمستخدموك يستحقون انطباعاً أولياً لا يُنسى 🎯\n\n#تطوير_أندرويد #الجودة_أولاً",
+    "published": false,
+    "post_media": ""
+  }
+]
