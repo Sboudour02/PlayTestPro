@@ -68,6 +68,7 @@ X_BEARER_TOKEN = os.getenv("X_BEARER_TOKEN", "").strip()
 # ── Facebook Page API ──
 FB_PAGE_ID = os.getenv("FB_PAGE_ID", "").strip()
 FB_PAGE_ACCESS_TOKEN = os.getenv("FB_PAGE_ACCESS_TOKEN", "").strip()
+FB_USER_ACCESS_TOKEN = os.getenv("FB_USER_ACCESS_TOKEN", "").strip()
 
 # ── RATE LIMITING ──
 MIN_DELAY_BETWEEN_POSTS = int(os.getenv("MIN_DELAY_BETWEEN_POSTS", "5"))
@@ -282,11 +283,34 @@ class FacebookPoster:
     def __init__(self):
         self.page_id = FB_PAGE_ID
         self.access_token = FB_PAGE_ACCESS_TOKEN
-        self.enabled = bool(self.page_id and self.access_token)
+        self.enabled = False
+        if not self.page_id:
+            logger.warning("⚠️ Facebook not configured (missing FB_PAGE_ID).")
+            return
+        # If a User Token is available, exchange it for a Page Token
+        if FB_USER_ACCESS_TOKEN:
+            self._fetch_page_token()
+        self.enabled = bool(self.access_token)
         if self.enabled:
             logger.info("📘 Facebook API initialized.")
         else:
-            logger.warning("⚠️ Facebook not configured (missing FB_PAGE_ID or FB_PAGE_ACCESS_TOKEN).")
+            logger.warning("⚠️ Facebook not configured (no usable access token).")
+
+    def _fetch_page_token(self):
+        """Exchange the long-lived User Token for a Page Access Token."""
+        try:
+            url = f"https://graph.facebook.com/v21.0/{self.page_id}"
+            params = {"fields": "access_token", "access_token": FB_USER_ACCESS_TOKEN}
+            resp = requests.get(url, params=params, timeout=15)
+            data = resp.json()
+            if "access_token" in data:
+                self.access_token = data["access_token"]
+                logger.info("📘 Page Access Token obtained from User Token via /me/accounts.")
+            else:
+                err = data.get("error", {}).get("message", str(data))
+                logger.warning(f"⚠️ Could not get Page Token from User Token: {err}")
+        except Exception as e:
+            logger.warning(f"⚠️ Failed to fetch Page Access Token: {e}")
 
     async def post_to_feed(self, text: str) -> dict:
         if not self.enabled:
