@@ -5,7 +5,7 @@
     "hour": 9,
     "text": "🎓 What is Google Play Closed Testing?\n\nClosed testing lets you share your app with up to 100 trusted testers before launch. You collect real feedback, catch bugs early, and increase your chances of a successful release. Google uses this data to evaluate app quality before featuring it.\n\nStart with 20 testers. Gather feedback. Fix issues. Scale to 100. Then go production.\n\n#AndroidDev #AppTesting",
     "text_ar": "🎓 ما هو الاختبار المغلق في Google Play؟\n\nالاختبار المغلق يتيح لك مشاركة تطبيقك مع ما يصل إلى 100 مختبر موثوق قبل الإطلاق. تجمع ملاحظات حقيقية، تكتشف الأخطاء مبكراً، وتزيد فرص نجاح إصدارك. تستخدم Google هذه البيانات لتقييم جودة التطبيق.\n\nابدأ بـ 20 مختبراً. اجمع الملاحظات. أصلح المشكلات. توسع إلى 100. ثم انطلق للإنتاج.\n\n#تطوير_أندرويد #اختبار_التطبيقات",
-    "published": true,
+    "published": false,
     "post_media": ""
   },
   {
@@ -14,7 +14,7 @@
     "hour": 15,
     "text": "💬 Quick poll for developers:\n\nWhat is your biggest challenge when releasing an app?\n\nA) Finding bugs before users do\nB) Getting enough testers\nC) Writing clear bug reports\nD) Managing feedback effectively\n\nDrop your answer in the comments 👇",
     "text_ar": "💬 استطلاع سريع للمطورين:\n\nما هو أكبر تحدٍ تواجهه عند إطلاق تطبيق؟\n\nأ) اكتشاف الأخطاء قبل المستخدمين\nب) الحصول على عدد كافٍ من المختبرين\nج) كتابة تقارير أخطاء واضحة\nد) إدارة الملاحظات بفعالية\n\nاكتب إجابتك في التعليقات 👇",
-    "published": true,
+    "published": false,
     "post_media": ""
   },
   {
