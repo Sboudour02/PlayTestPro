@@ -493,96 +493,107 @@ async def cmd_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
 @admin_only
 async def cmd_post_now(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """/post_now — Choose platform to post on"""
-    posts = context.application.bot_data.get("posts", [])
-    poster = context.application.bot_data.get("poster")
-    if not poster:
-        await update.message.reply_text("❌ Poster not available.")
-        return
+    try:
+        posts = context.application.bot_data.get("posts", [])
+        poster = context.application.bot_data.get("poster")
+        if not poster:
+            await update.message.reply_text("❌ Poster not available.")
+            return
 
-    post = get_next_unpublished(posts)
-    if not post:
-        await update.message.reply_text("✅ All TG posts have been published!")
-        return
+        post = get_next_unpublished(posts)
+        if not post:
+            await update.message.reply_text("✅ All TG posts have been published!")
+            return
 
-    context.bot_data["pending_post"] = {
-        "day": post["day"],
-        "post_number": post["post_number"],
-    }
+        context.application.bot_data["pending_post"] = {
+            "day": post["day"],
+            "post_number": post["post_number"],
+        }
 
-    keyboard = [
-        [
-            InlineKeyboardButton("📱 Telegram", callback_data="platform_tg"),
-            InlineKeyboardButton("📘 Facebook", callback_data="platform_fb"),
-        ],
-        [
-            InlineKeyboardButton("📱+📘 Both", callback_data="platform_both"),
-            InlineKeyboardButton("❌ Cancel", callback_data="platform_cancel"),
-        ],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+        keyboard = [
+            [
+                InlineKeyboardButton("📱 Telegram", callback_data="platform_tg"),
+                InlineKeyboardButton("📘 Facebook", callback_data="platform_fb"),
+            ],
+            [
+                InlineKeyboardButton("📱+📘 Both", callback_data="platform_both"),
+                InlineKeyboardButton("❌ Cancel", callback_data="platform_cancel"),
+            ],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await update.message.reply_text(
-        f"📢 <b>Day {post['day']}, Post #{post['post_number']}</b>\n\n"
-        f"Where to post?",
-        reply_markup=reply_markup,
-        parse_mode=ParseMode.HTML,
-    )
+        await update.message.reply_text(
+            f"📢 <b>Day {post['day']}, Post #{post['post_number']}</b>\n\n"
+            f"Where to post?",
+            reply_markup=reply_markup,
+            parse_mode=ParseMode.HTML,
+        )
+    except Exception as e:
+        logger.error(f"cmd_post_now error: {e}", exc_info=True)
+        await update.message.reply_text(f"❌ Error: {e}")
 
 
 async def cmd_platform_choice(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    await query.answer()
+    try:
+        query = update.callback_query
+        await query.answer()
 
-    choice = query.data
-    if choice == "platform_cancel":
-        await query.edit_message_text("❌ Cancelled.")
-        return
+        choice = query.data
+        if choice == "platform_cancel":
+            await query.edit_message_text("❌ Cancelled.")
+            return
 
-    pending = context.bot_data.get("pending_post", {})
-    day = pending.get("day")
-    post_number = pending.get("post_number")
+        pending = context.application.bot_data.get("pending_post", {})
+        day = pending.get("day")
+        post_number = pending.get("post_number")
 
-    posts = context.application.bot_data.get("posts", [])
-    poster = context.application.bot_data.get("poster")
-    fb_poster = context.application.bot_data.get("fb_poster")
-    db_state = context.application.bot_data.get("db_state")
+        posts = context.application.bot_data.get("posts", [])
+        poster = context.application.bot_data.get("poster")
+        fb_poster = context.application.bot_data.get("fb_poster")
+        db_state = context.application.bot_data.get("db_state")
 
-    # Find the post
-    post = None
-    for p in posts:
-        if p["day"] == day and p["post_number"] == post_number:
-            post = p
-            break
-    if not post:
-        await query.edit_message_text("❌ Post not found.")
-        return
+        # Find the post
+        post = None
+        for p in posts:
+            if p["day"] == day and p["post_number"] == post_number:
+                post = p
+                break
+        if not post:
+            await query.edit_message_text("❌ Post not found.")
+            return
 
-    await query.edit_message_text(
-        f"🚀 Posting Day {day}, Post #{post_number}..."
-    )
+        await query.edit_message_text(
+            f"🚀 Posting Day {day}, Post #{post_number}..."
+        )
 
-    results = []
+        results = []
 
-    if choice in ("platform_tg", "platform_both"):
-        result = await post_to_telegram(poster, post)
-        if result.get("success"):
-            mark_and_save(post, "tg", posts, db_state)
-            results.append(f"📱 Telegram: ✅ (ID: {result['message_id']})")
-        else:
-            results.append(f"📱 Telegram: ❌ {result.get('error', '')}")
+        if choice in ("platform_tg", "platform_both"):
+            result = await post_to_telegram(poster, post)
+            if result.get("success"):
+                mark_and_save(post, "tg", posts, db_state)
+                results.append(f"📱 Telegram: ✅ (ID: {result['message_id']})")
+            else:
+                results.append(f"📱 Telegram: ❌ {result.get('error', '')}")
 
-    if choice in ("platform_fb", "platform_both"):
-        result = await post_to_fb(fb_poster, post)
-        if result.get("success"):
-            mark_and_save(post, "fb", posts, db_state)
-            results.append(f"📘 Facebook: ✅ (ID: {result['post_id']})")
-        else:
-            results.append(f"📘 Facebook: ❌ {result.get('error', '')}")
+        if choice in ("platform_fb", "platform_both"):
+            result = await post_to_fb(fb_poster, post)
+            if result.get("success"):
+                mark_and_save(post, "fb", posts, db_state)
+                results.append(f"📘 Facebook: ✅ (ID: {result['post_id']})")
+            else:
+                results.append(f"📘 Facebook: ❌ {result.get('error', '')}")
 
-    await query.edit_message_text(
-        f"📢 <b>Day {day}, Post #{post_number}</b>\n\n" + "\n".join(results),
-        parse_mode=ParseMode.HTML,
-    )
+        await query.edit_message_text(
+            f"📢 <b>Day {day}, Post #{post_number}</b>\n\n" + "\n".join(results),
+            parse_mode=ParseMode.HTML,
+        )
+    except Exception as e:
+        logger.error(f"cmd_platform_choice error: {e}", exc_info=True)
+        try:
+            await query.edit_message_text(f"❌ Error: {e}")
+        except Exception:
+            pass
 
 
 @admin_only
